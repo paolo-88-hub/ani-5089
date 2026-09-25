@@ -1,50 +1,58 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <thread>
+#include <queue>
 #include <chrono>
-#include <algorithm>
+#include <thread>
 
 using namespace std;
+using namespace std::chrono;
+
+struct PositionSouris
+{
+    sf::Vector2i position;
+    steady_clock::time_point temps;
+};
 
 int main()
 {
-    // Création de la fenêtre
+
     sf::RenderWindow window(
         sf::VideoMode(1000, 700),
-        "Test de latence de la souris");
+        "Test de retard de la souris");
 
     window.setFramerateLimit(60);
 
     // Retard initial
-    int retard = 0;
+    int retardMs = 0;
 
-    // Position réelle de la souris
-    sf::Vector2i positionReelle;
+    // Historique des positions de la souris
+    queue<PositionSouris> historique;
 
-    // Position affichée après application du retard
-    sf::Vector2f positionAffichee(500, 350);
+    // Cercle qui suit la souris
+    sf::CircleShape cercle(20);
+    cercle.setFillColor(sf::Color::Blue);
+    cercle.setOrigin(20, 20);
 
-    // Cercle représentant le curseur
-    sf::CircleShape curseur(15);
-    curseur.setFillColor(sf::Color::Red);
-    curseur.setOrigin(15, 15);
+    cout << "========================================" << endl;
+    cout << "       TEST DE RETARD DE LA SOURIS" << endl;
+    cout << "========================================" << endl;
 
-    cout << "=====================================\n";
-    cout << "       TEST DE LATENCE SOURIS\n";
-    cout << "=====================================\n\n";
-
-    cout << "Le retard peut etre regle entre 0 et 200 ms.\n";
-    cout << "Utilisez :\n";
-    cout << "  + : augmenter le retard de 5 ms\n";
-    cout << "  - : diminuer le retard de 5 ms\n";
-    cout << "  Echap : quitter\n\n";
+    cout << endl;
+    cout << "Commandes :" << endl;
+    cout << "+ : augmenter le retard de 10 ms" << endl;
+    cout << "- : diminuer le retard de 10 ms" << endl;
+    cout << "R : remettre le retard a zero" << endl;
+    cout << "Echap : quitter" << endl;
+    cout << endl;
 
     while (window.isOpen())
     {
+
         sf::Event event;
 
         while (window.pollEvent(event))
         {
+
             if (event.type == sf::Event::Closed)
             {
                 window.close();
@@ -54,55 +62,87 @@ int main()
             if (event.type == sf::Event::KeyPressed &&
                 event.key.code == sf::Keyboard::Add)
             {
-                retard = min(200, retard + 5);
+
+                if (retardMs < 200)
+                {
+                    retardMs += 10;
+                }
 
                 cout << "Retard : "
-                     << retard
-                     << " ms\n";
+                     << retardMs << " ms" << endl;
             }
 
             // Diminuer le retard
             if (event.type == sf::Event::KeyPressed &&
                 event.key.code == sf::Keyboard::Subtract)
             {
-                retard = max(0, retard - 5);
+
+                if (retardMs > 0)
+                {
+                    retardMs -= 10;
+                }
 
                 cout << "Retard : "
-                     << retard
-                     << " ms\n";
+                     << retardMs << " ms" << endl;
+            }
+
+            // Remettre à zéro
+            if (event.type == sf::Event::KeyPressed &&
+                event.key.code == sf::Keyboard::R)
+            {
+
+                retardMs = 0;
+
+                cout << "Retard : 0 ms" << endl;
             }
 
             if (event.type == sf::Event::KeyPressed &&
                 event.key.code == sf::Keyboard::Escape)
             {
+
                 window.close();
             }
         }
 
-        // Récupération de la position réelle de la souris
-        positionReelle = sf::Mouse::getPosition(window);
+        // Enregistrer la position actuelle de la souris
+        sf::Vector2i positionSouris =
+            sf::Mouse::getPosition(window);
 
-        /*
-         * Simulation du retard.
-         *
-         * On attend le nombre de millisecondes
-         * choisi avant d'afficher la nouvelle position.
-         */
-        this_thread::sleep_for(
-            chrono::milliseconds(retard));
+        historique.push({positionSouris,
+                         steady_clock::now()});
 
-        positionAffichee.x = static_cast<float>(
-            positionReelle.x);
+        // Rechercher une position datant du retard demandé
+        auto maintenant = steady_clock::now();
 
-        positionAffichee.y = static_cast<float>(
-            positionReelle.y);
+        while (!historique.empty())
+        {
 
-        curseur.setPosition(positionAffichee);
+            auto age = duration_cast<milliseconds>(
+                           maintenant - historique.front().temps)
+                           .count();
+
+            if (age >= retardMs)
+            {
+
+                sf::Vector2i anciennePosition =
+                    historique.front().position;
+
+                cercle.setPosition(
+                    static_cast<float>(anciennePosition.x),
+                    static_cast<float>(anciennePosition.y));
+
+                historique.pop();
+
+                break;
+            }
+
+            break;
+        }
 
         // Affichage
-        window.clear(sf::Color::White);
+        window.clear(sf::Color::Black);
 
-        window.draw(curseur);
+        window.draw(cercle);
 
         window.display();
     }
