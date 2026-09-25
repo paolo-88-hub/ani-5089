@@ -1,24 +1,20 @@
-#include <iostream>
+﻿#include <iostream>
 #include <iomanip>
 using namespace std;
 
 int main()
 {
 
-    // Angles du champ de vision de l'oeil gauche (en degres)
     double gauche = 44.70;
     double droite = 36.24;
     double haut = 38.88;
     double bas = 45.23;
 
-    // Calcul du champ horizontal et vertical
     double champHorizontal = gauche + droite;
     double champVertical = haut + bas;
 
-    // Surface angulaire approximative
     double surface = champHorizontal * champVertical;
 
-    // Champ symetrique de meme surface
     double angleSymetriqueHorizontal = champHorizontal;
     double angleSymetriqueVertical = surface / angleSymetriqueHorizontal;
 

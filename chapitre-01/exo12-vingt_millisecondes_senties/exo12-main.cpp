@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <queue>
 #include <chrono>
@@ -22,13 +22,10 @@ int main()
 
     window.setFramerateLimit(60);
 
-    // Retard initial
     int retardMs = 0;
 
-    // Historique des positions de la souris
     queue<PositionSouris> historique;
 
-    // Cercle qui suit la souris
     sf::CircleShape cercle(20);
     cercle.setFillColor(sf::Color::Blue);
     cercle.setOrigin(20, 20);
@@ -58,7 +55,6 @@ int main()
                 window.close();
             }
 
-            // Augmenter le retard
             if (event.type == sf::Event::KeyPressed &&
                 event.key.code == sf::Keyboard::Add)
             {
@@ -72,7 +68,6 @@ int main()
                      << retardMs << " ms" << endl;
             }
 
-            // Diminuer le retard
             if (event.type == sf::Event::KeyPressed &&
                 event.key.code == sf::Keyboard::Subtract)
             {
@@ -86,7 +81,6 @@ int main()
                      << retardMs << " ms" << endl;
             }
 
-            // Remettre à zéro
             if (event.type == sf::Event::KeyPressed &&
                 event.key.code == sf::Keyboard::R)
             {
@@ -104,14 +98,12 @@ int main()
             }
         }
 
-        // Enregistrer la position actuelle de la souris
         sf::Vector2i positionSouris =
             sf::Mouse::getPosition(window);
 
         historique.push({positionSouris,
                          steady_clock::now()});
 
-        // Rechercher une position datant du retard demandé
         auto maintenant = steady_clock::now();
 
         while (!historique.empty())
@@ -139,7 +131,6 @@ int main()
             break;
         }
 
-        // Affichage
         window.clear(sf::Color::Black);
 
         window.draw(cercle);

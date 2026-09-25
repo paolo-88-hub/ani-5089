@@ -1,10 +1,7 @@
-#include <iostream>
+﻿#include <iostream>
 #include <iomanip>
 using namespace std;
 
-// ======================================
-// Structure Vecteur
-// ======================================
 struct Vecteur
 {
     double x;
@@ -12,9 +9,6 @@ struct Vecteur
     double z;
 };
 
-// ======================================
-// Structure Quaternion
-// ======================================
 struct Quaternion
 {
     double w;
@@ -23,18 +17,12 @@ struct Quaternion
     double z;
 };
 
-// ======================================
-// Structure Pose
-// ======================================
 struct Pose
 {
     Vecteur position;
     Quaternion rotation;
 };
 
-// ======================================
-// Produit vectoriel
-// ======================================
 Vecteur produitVectoriel(Vecteur a, Vecteur b)
 {
 
@@ -44,9 +32,6 @@ Vecteur produitVectoriel(Vecteur a, Vecteur b)
         a.x * b.y - a.y * b.x};
 }
 
-// ======================================
-// Addition de vecteurs
-// ======================================
 Vecteur addition(Vecteur a, Vecteur b)
 {
 
@@ -56,9 +41,6 @@ Vecteur addition(Vecteur a, Vecteur b)
         a.z + b.z};
 }
 
-// ======================================
-// Multiplication par un scalaire
-// ======================================
 Vecteur multiplier(Vecteur v, double s)
 {
 
@@ -68,9 +50,6 @@ Vecteur multiplier(Vecteur v, double s)
         v.z * s};
 }
 
-// ======================================
-// Rotation d'un vecteur par quaternion
-// ======================================
 Vecteur appliquerRotation(
     Quaternion q,
     Vecteur point)
@@ -81,18 +60,14 @@ Vecteur appliquerRotation(
         q.y,
         q.z};
 
-    // t = 2 * (qVector x point)
     Vecteur t = produitVectoriel(qVector, point);
     t = multiplier(t, 2.0);
 
-    // w * t
     Vecteur wt = multiplier(t, q.w);
 
-    // qVector x t
     Vecteur qCrossT =
         produitVectoriel(qVector, t);
 
-    // resultat = point + w*t + qVector x t
     Vecteur resultat =
         addition(point, wt);
 
@@ -102,47 +77,34 @@ Vecteur appliquerRotation(
     return resultat;
 }
 
-// ======================================
-// Fonction 1 : rotation puis translation
-// ======================================
 Vecteur rotationPuisTranslation(
     Pose pose,
     Vecteur point)
 {
 
-    // Rotation
     Vecteur resultat =
         appliquerRotation(pose.rotation, point);
 
-    // Translation
     resultat =
         addition(resultat, pose.position);
 
     return resultat;
 }
 
-// ======================================
-// Fonction 2 : translation puis rotation
-// ======================================
 Vecteur translationPuisRotation(
     Pose pose,
     Vecteur point)
 {
 
-    // Translation d'abord
     Vecteur resultat =
         addition(point, pose.position);
 
-    // Rotation ensuite
     resultat =
         appliquerRotation(pose.rotation, resultat);
 
     return resultat;
 }
 
-// ======================================
-// Affichage d'un vecteur
-// ======================================
 void afficher(Vecteur v)
 {
 
@@ -152,25 +114,18 @@ void afficher(Vecteur v)
          << v.z << ")";
 }
 
-// ======================================
-// Programme principal
-// ======================================
 int main()
 {
 
     Pose pose;
     Vecteur point;
 
-    // Lecture de la translation
     cin >> pose.position.x >> pose.position.y >> pose.position.z;
 
-    // Lecture du quaternion
     cin >> pose.rotation.w >> pose.rotation.x >> pose.rotation.y >> pose.rotation.z;
 
-    // Lecture du point
     cin >> point.x >> point.y >> point.z;
 
-    // Calcul des deux transformations
     Vecteur resultat1 =
         rotationPuisTranslation(pose, point);
 

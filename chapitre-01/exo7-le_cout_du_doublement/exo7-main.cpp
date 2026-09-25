@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <chrono>
 #include <iomanip>
 #include <cstdlib>
@@ -6,14 +6,11 @@
 using namespace std;
 using namespace chrono;
 
-// Fonction qui contient uniquement le rendu
 void rendu()
 {
 
-    // Effacement de l'ecran
     system("cls");
 
-    // Dessin
     for (int i = 0; i < 20; i++)
     {
         cout << "                    *" << endl;
@@ -30,13 +27,11 @@ int main()
 
     cout << "Mesure du temps de rendu..." << endl;
 
-    // Mesure du rendu seul
     for (int i = 0; i < NOMBRE_MESURES; i++)
     {
 
         auto debut = high_resolution_clock::now();
 
-        // Rendu uniquement
         rendu();
 
         auto fin = high_resolution_clock::now();
@@ -46,13 +41,10 @@ int main()
         somme += duree.count();
     }
 
-    // Temps moyen d'un rendu
     double tempsRendu = somme / NOMBRE_MESURES;
 
-    // Estimation du rendu deux fois
     double renduDeuxFois = tempsRendu * 2.0;
 
-    // Temps restant sur une limite de 11 ms
     double tempsRestant = LIMITE_MS - renduDeuxFois;
 
     cout << fixed << setprecision(2);

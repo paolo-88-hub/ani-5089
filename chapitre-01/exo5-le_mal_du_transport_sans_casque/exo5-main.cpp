@@ -1,11 +1,10 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 using namespace std;
 
 int main()
 {
 
-    // Témoignages des trois personnes
     string temoignages[3] = {
         "Apres quelques secondes, j'ai ressenti une legere gene et "
         "une sensation de mouvement. A la fin de la video, j'avais "

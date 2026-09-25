@@ -1,17 +1,15 @@
-#include <iostream>
+﻿#include <iostream>
 #include <iomanip>
 using namespace std;
 
 int main()
 {
-    // Écart entre les pupilles des 6 personnes (en cm)
     double mesures[6] = {6.2, 6.0, 6.4, 6.1, 6.3, 6.2};
 
     double somme = 0;
     double minimum = mesures[0];
     double maximum = mesures[0];
 
-    // Calcul de la somme, du minimum et du maximum
     for (int i = 0; i < 6; i++)
     {
         somme += mesures[i];
@@ -27,13 +25,10 @@ int main()
         }
     }
 
-    // Calcul de la moyenne
     double moyenne = somme / 6;
 
-    // Calcul de l'écart
     double ecart = maximum - minimum;
 
-    // Affichage des résultats
     cout << fixed << setprecision(2);
 
     cout << "=== Mesure de l'ecart entre les pupilles ===" << endl;

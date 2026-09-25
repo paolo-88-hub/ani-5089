@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <chrono>
 #include <thread>
 #include <cstdlib>
@@ -21,13 +21,10 @@ int main()
     for (int i = 0; i < NOMBRE_IMAGES; i++)
     {
 
-        // Debut de la mesure
         auto debut = high_resolution_clock::now();
 
-        // Effacement de l'ecran
         system("cls");
 
-        // Petit dessin
         cout << "Image : " << i + 1 << endl;
 
         for (int j = 0; j < 20; j++)
@@ -35,21 +32,17 @@ int main()
             cout << "                    *" << endl;
         }
 
-        // Fin de la mesure
         auto fin = high_resolution_clock::now();
 
-        // Calcul de la duree en millisecondes
         duration<double, milli> duree = fin - debut;
 
         double dureeMs = duree.count();
 
-        // Recherche de l'image la plus longue
         if (dureeMs > plusLongueImage)
         {
             plusLongueImage = dureeMs;
         }
 
-        // Comptage des images depassant 11 ms
         if (dureeMs > SEUIL_MS)
         {
             nombreImagesDepassant11ms++;
@@ -74,7 +67,6 @@ int main()
 
     cout << "========================================" << endl;
 
-    // Conclusion automatique
     if (plusLongueImage <= 11.0 &&
         nombreImagesDepassant11ms == 0)
     {
