@@ -1,5 +1,6 @@
+# Produit scalaire des directions
 
-Résolution
+## Résolution
 
 Soit le point :
 

@@ -1,1 +1,21 @@
-Résolution1. Principe du programmeLe programme modélise une salle d'attente et son mobilier sous forme de dimensions initiales (en mètres). Il lit un facteur d'échelle à l'entrée standard, effectue le produit vectoriel par ce facteur et affiche le bilan métrique complet.2. Expérience comportementale (Descriptions des trois personnes)Trois facteurs d'échelle distincts ont été appliqués sans informer les participants du multiplicateur choisi :Facteur $k_1 = 1.0$ (Salle réelle / Échelle $1:1$)Facteur $k_2 = 0.1$ (Maquette / Échelle $1:10$)Facteur $k_3 = 5.0$ (Espace géant / Échelle $5:1$)Relevé des impressions subjectives :Personne 1 (Facteur $1.0$) :« C'est une pièce standard et fonctionnelle. La table basse est à hauteur de genoux, la chaise est adaptée et le plafond semble à une hauteur habituelle d'appartement. C'est un espace réaliste et utilisable au quotidien. »Personne 2 (Facteur $0.1$) :« Tout ressemble à un modèle réduit ou à une maison de poupée. La pièce tient sur un bureau, la chaise est haute de quelques centimètres et la table se saisit entre deux doigts. C'est un objet de démonstration ou une maquette d'architecte. »Personne 3 (Facteur $5.0$) :« Cet endroit donne une sensation de vertige, comme si j'avais rétréci. Le plafond culmine à des hauteurs cathédrales et la chaise ressemble à un monument infranchissable. La table occupe la surface d'un grand terrain. »
+# Le monde à la mauvaise échelle
+
+## Principe du programme
+
+Le programme représente une salle d'attente et son mobilier avec des dimensions initiales en mètres. Il lit un facteur d'échelle, multiplie chaque dimension par ce facteur et affiche les dimensions obtenues.
+
+## Expérience
+
+Trois facteurs d'échelle sont comparés :
+
+- $k_1 = 1.0$ : salle à l'échelle réelle, soit $1:1$ ;
+- $k_2 = 0.1$ : maquette, soit $1:10$ ;
+- $k_3 = 5.0$ : espace agrandi, soit $5:1$.
+
+## Impressions recueillies
+
+**Personne 1, facteur 1.0 :** la pièce paraît standard et fonctionnelle. La table, la chaise et le plafond ont des dimensions habituelles.
+
+**Personne 2, facteur 0.1 :** la pièce ressemble à une maquette ou à une maison de poupée. Les meubles sont minuscules et pourraient tenir sur un bureau.
+
+**Personne 3, facteur 5.0 :** l'espace paraît immense et donne une sensation de vertige. Le plafond semble très haut et le mobilier est difficile à atteindre.

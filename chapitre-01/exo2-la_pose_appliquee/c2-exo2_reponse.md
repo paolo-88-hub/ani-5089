@@ -1,9 +1,11 @@
-Résolution
+# Application d'une pose
+
+## Résolution
 
 Une pose contient :
 
-une position (tx, ty, tz) ;
-un quaternion (w, x, y, z).
+- une position (tx, ty, tz) ;
+- un quaternion (w, x, y, z).
 
 Pour un point \(P\), on applique :
 
@@ -22,7 +24,8 @@ $$ P'_{rotation}=P+w\,t+(q_{xyz}\times t) $$
 Enfin :
 
 $$ P_{final}=P'_{rotation}+T $$
-Exemple
+
+## Exemple
 
 Prenons :
 

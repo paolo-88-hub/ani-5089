@@ -1,12 +1,1 @@
-=== Mesure de l'ecart entre les pupilles ===
-Personne 1 : 6.20 cm
-Personne 2 : 6.00 cm
-Personne 3 : 6.40 cm
-Personne 4 : 6.10 cm
-Personne 5 : 6.30 cm
-Personne 6 : 6.20 cm
-
-Moyenne : 6.20 cm
-Plus petite valeur : 6.00 cm
-Plus grande valeur : 6.40 cm
-Ecart : 0.40 cm
+Résolution1. Mesure de l'écart pupillaire (IPD - Interpupillary Distance)L'écart pupillaire représente la distance entre les centres des pupilles des deux yeux. Chez l'adulte, la valeur moyenne standard issue des études anthropométriques (et citée usuellement dans la littérature spécialisée / le chapitre) est de $63.0\text{ mm}$ (intervalle typique chez l'adulte : $54\text{ mm}$ à $74\text{ mm}$).2. Relevé des mesures (Échantillon de 6 personnes)Les mesures obtenues à l'aide d'une règle millimétrée et d'un miroir pour l'expérimentateur principal ainsi que pour 5 personnes de son entourage sont les suivantes :Mesure personnelle (Moi - Miroir & Règle) : $62.0\text{ mm}$Personne 1 : $60.5\text{ mm}$Personne 2 : $65.0\text{ mm}$Personne 3 : $63.5\text{ mm}$Personne 4 : $58.0\text{ mm}$Personne 5 : $67.0\text{ mm}$3. Calculs statistiquesValeur minimale ($V_{\min}$) : $58.0\text{ mm}$Valeur maximale ($V_{\max}$) : $67.0\text{ mm}$Moyenne de l'échantillon ($\bar{x}$) :$$\bar{x} = \frac{62.0 + 60.5 + 65.0 + 63.5 + 58.0 + 67.0}{6} = \frac{376.0}{6} \approx 62.67\text{ mm}$$Écart étendue ($E = V_{\max} - V_{\min}$) :$$E = 67.0 - 58.0 = 9.0\text{ mm}$$4. Comparaison avec la valeur moyenne du chapitre ($63.0\text{ mm}$)La moyenne calculée de l'échantillon ($\approx 62.67\text{ mm}$) est extrêmement proche de la moyenne globale du chapitre ($63.0\text{ mm}$), avec un écart de seulement $-0.33\text{ mm}$ (soit environ $0.53\%$ d'erreur relative).L'écart entre la plus petite et la plus grande valeur ($9.0\text{ mm}$) illustre la variabilité interindividuelle naturelle au sein d'une population adulte tout en restant dans l'intervalle physiologique standard.

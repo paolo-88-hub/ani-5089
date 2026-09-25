@@ -89,12 +89,12 @@ void afficherMatrice(const Matrix4x4 &m)
 
 int main()
 {
-    constexpr double PI = 3.14159265358979323846;
-    double theta = PI / 4.0;
-    Matrix4x4 poseValide = {{{std::cos(theta), -std::sin(theta), 0.0, 5.0},
-                             {std::sin(theta), std::cos(theta), 0.0, 3.0},
-                             {0.0, 0.0, 1.0, -2.0},
-                             {0.0, 0.0, 0.0, 1.0}}};
+    double theta = 0.7853981633974483;
+    Matrix4x4 poseValide{};
+    poseValide[0] = {std::cos(theta), -std::sin(theta), 0.0, 5.0};
+    poseValide[1] = {std::sin(theta), std::cos(theta), 0.0, 3.0};
+    poseValide[2] = {0.0, 0.0, 1.0, -2.0};
+    poseValide[3] = {0.0, 0.0, 0.0, 1.0};
 
     bool ok = false;
     Matrix4x4 invGen = inverserGenerale(poseValide, ok);
@@ -115,10 +115,11 @@ int main()
     }
     std::cout << "Ecart maximal sur les 16 coefficients : " << maxDiff << "\n\n";
 
-    Matrix4x4 poseDegeneree = {{{0.0, 0.0, 0.0, 5.0},
-                                {0.0, 0.0, 0.0, 3.0},
-                                {0.0, 0.0, 0.0, -2.0},
-                                {0.0, 0.0, 0.0, 1.0}}};
+    Matrix4x4 poseDegeneree{};
+    poseDegeneree[0] = {0.0, 0.0, 0.0, 5.0};
+    poseDegeneree[1] = {0.0, 0.0, 0.0, 3.0};
+    poseDegeneree[2] = {0.0, 0.0, 0.0, -2.0};
+    poseDegeneree[3] = {0.0, 0.0, 0.0, 1.0};
 
     std::cout << "--- Test sur Pose Degeneree (Inversion Generale) ---\n";
     Matrix4x4 invDegenere = inverserGenerale(poseDegeneree, ok);

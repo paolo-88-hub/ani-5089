@@ -1,1 +1,29 @@
-RésolutionUne pose dans l'espace (3D) est représentée par une matrice de transformation homogène $4 \times 4$ de la forme :$$T = \begin{pmatrix} R & t \\ 0_{1 \times 3} & 1 \end{pmatrix}$$où $R \in SO(3)$ est une matrice de rotation $3 \times 3$ et $t \in \mathbb{R}^3$ est un vecteur de translation.1. Méthode 1 : Inversion générale par élimination de Gauss-JordanPour une matrice $4 \times 4$ quelconque $A$, l'inverse $A^{-1}$ est calculé en résolvant $A \cdot A^{-1} = I_4$.Cette méthode ne tire pas partie de la structure géométrique et nécessite la non-nullité du déterminant ($\det(A) \neq 0$).2. Méthode 2 : Inversion directe (Géométrique / Isométrie SE(3))En exploitant la propriété d'orthogonalité de la matrice de rotation ($R^{-1} = R^T$), l'inverse exact d'une transformation rigide est donné directement par :$$T^{-1} = \begin{pmatrix} R^T & -R^T t \\ 0_{1 \times 3} & 1 \end{pmatrix}$$Le « conjugué » correspond à la transposée de la rotation $R^T$.La « translation opposée » correspond à $-R^T t$.3. Cas de la pose dégénéréeUne pose est dégénérée lorsque la partie rotation subit une déformation (ex. mise à l'échelle nulle ou écrasement sur un plan), rendant la matrice $T$ non inversible ($\det(T) = 0$).Méthode 1 (Générale) : L'algorithme échoue (division par zéro / matrice singulière) ou génère des valeurs indéfinies (NaN / Inf).Méthode 2 (Directe) : Calcule une matrice transposée sans vérification du déterminant. Elle renvoie un résultat fini mais faux d'un point de vue géométrique.
+# Inversion d'une matrice de pose
+
+Une pose 3D est représentée par une matrice homogène $4 \times 4$ :
+
+$$
+T = \begin{pmatrix} R & t \\ 0_{1 \times 3} & 1 \end{pmatrix}
+$$
+
+où $R \in SO(3)$ est la matrice de rotation et $t \in \mathbb{R}^3$ le vecteur de translation.
+
+## Inversion générale
+
+Pour une matrice carrée inversible $A$, l'inversion générale cherche $A^{-1}$ telle que $A A^{-1} = I$. L'élimination de Gauss-Jordan convient à toute matrice inversible, mais ne tire pas parti de la structure particulière d'une pose.
+
+Une matrice singulière, pour laquelle le déterminant est nul, n'a pas d'inverse.
+
+## Inversion directe d'une pose
+
+Une matrice de rotation est orthogonale, donc $R^{-1} = R^T$. L'inverse d'une transformation rigide s'écrit alors :
+
+$$
+T^{-1} = \begin{pmatrix} R^T & -R^T t \\ 0_{1 \times 3} & 1 \end{pmatrix}
+$$
+
+La rotation inverse est la transposée $R^T$, et la translation inverse est $-R^Tt$.
+
+## Pose dégénérée
+
+Si la partie rotation est singulière, la matrice homogène n'est pas inversible. La méthode générale doit alors signaler son échec. La formule directe suppose une vraie rotation orthogonale ; appliquée à une matrice dégénérée, elle ne donne pas nécessairement l'inverse.

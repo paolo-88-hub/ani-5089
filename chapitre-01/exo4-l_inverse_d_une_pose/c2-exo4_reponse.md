@@ -1,4 +1,6 @@
-Résolution
+# Inverse d'une pose
+
+## Résolution
 
 Une pose est composée de :
 
@@ -7,12 +9,13 @@ un quaternion de rotation \(q\).
 
 Pour inverser une pose :
 
-1. Inversion du quaternion
+### Inversion du quaternion
 
 Comme le quaternion est normalisé, son inverse est simplement son conjugué :
 
 $$ q^{-1}=(w,-x,-y,-z) $$
-2. Inversion de la position
+
+### Inversion de la position
 
 La position inverse est :
 
@@ -20,7 +23,7 @@ $$ T^{-1}=R^{-1}(-T) $$
 
 Autrement dit, on prend d'abord la position opposée, puis on la fait tourner avec le quaternion conjugué.
 
-3. Vérification
+### Vérification
 
 On choisit un point \(P\).
 

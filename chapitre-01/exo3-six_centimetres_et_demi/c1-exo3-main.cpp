@@ -1,49 +1,41 @@
 ﻿#include <iostream>
+#include <vector>
+#include <numeric>
+#include <algorithm>
 #include <iomanip>
-using namespace std;
+#include <cmath>
 
 int main()
 {
-    double mesures[6] = {6.2, 6.0, 6.4, 6.1, 6.3, 6.2};
+    std::vector<double> ipd_mesures = {62.0, 60.5, 65.0, 63.5, 58.0, 67.0};
+    const double ipd_chapitre = 63.0;
 
-    double somme = 0;
-    double minimum = mesures[0];
-    double maximum = mesures[0];
+    double min_val = *std::min_element(ipd_mesures.begin(), ipd_mesures.end());
+    double max_val = *std::max_element(ipd_mesures.begin(), ipd_mesures.end());
 
-    for (int i = 0; i < 6; i++)
+    double somme = std::accumulate(ipd_mesures.begin(), ipd_mesures.end(), 0.0);
+    double moyenne = somme / ipd_mesures.size();
+
+    double ecart_min_max = max_val - min_val;
+    double diff_chapitre = moyenne - ipd_chapitre;
+
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "--- Releve des 6 mesures IPD (en mm) ---\n";
+    std::cout << "Mesure personnelle (Moi) : " << ipd_mesures[0] << " mm\n";
+    for (size_t i = 1; i < ipd_mesures.size(); ++i)
     {
-        somme += mesures[i];
-
-        if (mesures[i] < minimum)
-        {
-            minimum = mesures[i];
-        }
-
-        if (mesures[i] > maximum)
-        {
-            maximum = mesures[i];
-        }
+        std::cout << "Personne " << i << "               : " << ipd_mesures[i] << " mm\n";
     }
 
-    double moyenne = somme / 6;
+    std::cout << "\n--- Resultats Statistiques ---\n";
+    std::cout << "Valeur minimale              : " << min_val << " mm\n";
+    std::cout << "Valeur maximale              : " << max_val << " mm\n";
+    std::cout << "Moyenne de l'echantillon     : " << moyenne << " mm\n";
+    std::cout << "Ecart (Max - Min)            : " << ecart_min_max << " mm\n";
 
-    double ecart = maximum - minimum;
-
-    cout << fixed << setprecision(2);
-
-    cout << "=== Mesure de l'ecart entre les pupilles ===" << endl;
-
-    for (int i = 0; i < 6; i++)
-    {
-        cout << "Personne " << i + 1 << " : "
-             << mesures[i] << " cm" << endl;
-    }
-
-    cout << endl;
-    cout << "Moyenne : " << moyenne << " cm" << endl;
-    cout << "Plus petite valeur : " << minimum << " cm" << endl;
-    cout << "Plus grande valeur : " << maximum << " cm" << endl;
-    cout << "Ecart : " << ecart << " cm" << endl;
+    std::cout << "\n--- Comparaison avec le Chapitre ---\n";
+    std::cout << "Valeur moyenne du chapitre   : " << ipd_chapitre << " mm\n";
+    std::cout << "Difference (Moyenne - Chap)  : " << diff_chapitre << " mm\n";
 
     return 0;
 }

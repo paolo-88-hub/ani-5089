@@ -1,15 +1,20 @@
-Résolution
+# Ordre d'application des transformations
+
+## Résolution
 
 On a deux façons d'appliquer une pose.
 
-1. Rotation puis translation
+### Rotation puis translation
+
 $$ P_1 = R(P) + T $$
-2. Translation puis rotation
+
+### Translation puis rotation
+
 $$ P_2 = R(P + T) $$
 
 Ces deux opérations ne donnent généralement pas le même résultat.
 
-Exemple
+## Exemple
 
 Prenons :
 
@@ -37,7 +42,8 @@ Les résultats sont donc différents :
 
 Rotation puis translation :  (10, 1, 0)
 Translation puis rotation :  (0, 11, 0)
-Quand les deux résultats coïncident-ils ?
+
+## Quand les deux résultats coïncident-ils ?
 
 Un cas simple est de prendre une translation nulle :
 
