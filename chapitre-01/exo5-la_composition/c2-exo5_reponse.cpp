@@ -38,8 +38,9 @@ double calculerEcart(const Point &pt1, const Point &pt2)
 
 int main()
 {
-    Pose P1 = {1.0, 2.0, M_PI / 4.0};
-    Pose P2 = {3.0, -1.0, M_PI / 6.0};
+    constexpr double PI = 3.14159265358979323846;
+    Pose P1 = {1.0, 2.0, PI / 4.0};
+    Pose P2 = {3.0, -1.0, PI / 6.0};
     Point p = {2.0, 5.0};
 
     Point p_temp = appliquerPose(P1, p);
