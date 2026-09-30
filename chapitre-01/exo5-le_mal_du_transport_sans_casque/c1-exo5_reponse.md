@@ -1,21 +1,22 @@
-============================================
-     EXPERIENCE : VIDEO EN MOUVEMENT
-============================================
+# Expérience : vidéo en mouvement
 
-Duree de l'experience : 2 minutes
-Conditions : video en plein ecran, regardee de tres pres
+## Expérience
 
-Temoignage de la personne 1 :
-Apres quelques secondes, j'ai ressenti une legere gene et une sensation de mouvement. A la fin de la video, j'avais un peu mal a la tete.
+Durée de l'expérience : 2 minutes  
+Conditions : vidéo en plein écran, regardée de très près
 
-Temoignage de la personne 2 :
-J'ai ressenti une impression de desequilibre et un leger vertige. Les mouvements rapides de la camera etaient assez desagreables a regarder.
+### Témoignage de la personne 1
 
-Temoignage de la personne 3 :
-Au debut, je ne ressentais presque rien, mais apres environ une minute, j'ai commence a avoir une sensation de fatigue visuelle et une legere nausee.
+Après quelques secondes, j'ai ressenti une légère gêne et une sensation de mouvement. À la fin de la vidéo, j'avais un peu mal à la tête.
 
-============================================
-Conclusion :
-Les participants peuvent ressentir une gene, du vertige,
-une fatigue visuelle ou une sensation de mouvement.
-============================================
+### Témoignage de la personne 2
+
+J'ai ressenti une impression de déséquilibre et un léger vertige. Les mouvements rapides de la caméra étaient assez désagréables à regarder.
+
+### Témoignage de la personne 3
+
+Au début, je ne ressentais presque rien, mais après environ une minute, j'ai commencé à avoir une sensation de fatigue visuelle et une légère nausée.
+
+## Conclusion
+
+Les participants peuvent ressentir une gêne, du vertige, une fatigue visuelle ou une sensation de mouvement.

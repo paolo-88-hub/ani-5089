@@ -1,11 +1,11 @@
-Mesure de 1000 images...
+# Mesure de 1000 images
 
-========================================
-          RESULTATS DE LA MESURE
-========================================
-Nombre total d'images : 1000
-Duree de la plus longue image : 18.42 ms
-Nombre d'images depassant 11 ms : 27
-========================================
-Conclusion : certaines images depassent
-le seuil de 11 ms.
+## Résultats de la mesure
+
+- Nombre total d'images : 1000
+- Durée de la plus longue image : 18.42 ms
+- Nombre d'images dépassant 11 ms : 27
+
+## Conclusion
+
+Certaines images dépassent le seuil de 11 ms.

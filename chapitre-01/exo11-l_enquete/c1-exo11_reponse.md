@@ -1,5 +1,8 @@
-Réponses recueillies
-Personne 1 :
+# Enquête sur l’immersion en réalité virtuelle
+
+## Réponses recueillies
+
+### Personne 1
 
 « La première chose dont je me souviens, c’est d’avoir été impressionné par le fait que l’environnement semblait vraiment autour de moi. J’ai ressenti une petite gêne au niveau des yeux après quelques minutes. »
 
