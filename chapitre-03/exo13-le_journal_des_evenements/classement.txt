@@ -1,0 +1,6 @@
+Redimensionnement : 1275
+Souris : 1008
+Touche : 191
+Molette : 35
+Pointeur : 32
+Focus : 15

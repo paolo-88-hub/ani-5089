@@ -1,0 +1,7 @@
+Les deux séries proviennent de la même manipulation, où le programme lit le champ rawDeltaX / rawDeltaY du moteur (avant.txt) et de mon accumulateur (apres.txt) sur dix images consécutives, encadrant l'arrêt de la souris.
+
+À l'arrêt de la souris : Dans avant.txt, les six dernières lignes restent bloquées à 1 -1. Ne remettant pas le champ à zéro en l'absence de nouvel événement brut, le moteur conserve le dernier mouvement reçu. L'intégrer à chaque image fait tourner la caméra indéfiniment. Dans apres.txt, les cinq dernières lignes valent 0 0 car l'accumulateur est réinitialisé à chaque image, garantissant un arrêt immédiat.
+
+Lors des mouvements rapides : À la 3ᵉ image, le moteur affiche 18 -11 contre 56 -37 pour l'accumulateur (environ le triple). À la 4ᵉ, il affiche 2 -1 contre 19 -10. Comme la souris envoie plusieurs événements par image, le moteur écrase son champ à chaque fois et perd les valeurs intermédiaires. L'accumulateur, lui, les somme toutes. Résultat : le moteur sous-estime les déplacements rapides, alors qu'à basse vitesse (1ʳᵉ et 2ᵉ images), un seul événement survenant par image, les résultats sont quasi identiques.
+
+Ces deux anomalies découlent de la même cause : un champ réécrit plutôt qu'additionné, et jamais réinitialisé.

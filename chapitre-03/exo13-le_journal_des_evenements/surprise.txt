@@ -1,0 +1,5 @@
+La proportion d'événements de Redimensionnement est surprenante : elle représente la moitié du journal (1275 lignes sur 2556), devançant les mouvements de Souris (1008 lignes), alors que le bord de la fenêtre n'a été étiré que quelques secondes sur une minute de test.
+
+Cela s'explique par le comportement du système, qui ne déclenche pas un événement unique à la fin de la manipulation, mais envoie chaque taille intermédiaire. Durant ces 7 secondes de redimensionnement, le système a généré environ 180 événements par seconde. Si la fonction de rappel (callback) réalise une tâche lourde (comme la re-création des surfaces de rendu), elle est exécutée des centaines de fois inutilement. Il est donc préférable de simplement stocker la nouvelle dimension lors du rappel et de n'effectuer le traitement lourd qu'une seule fois par image.
+
+Autre constatation : le type Touche totalise 191 lignes malgré un nombre réduit de frappes, ce qui illustre le mécanisme de répétition automatique généré lorsqu'une touche reste enfoncée.
