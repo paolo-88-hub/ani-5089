@@ -1,58 +1,62 @@
 from Jenga import *
-import os
+from jengaconfig import *
 
-NK = os.environ.get("NKENTSEU_ROOT", "C:/tools/Nkentseu").replace("\\", "/")
+with project("ExoFenetreNue"):
+    useappdeps("platform", "core", "memory", "containers", "math", "threading", "logger", "time", "event", "window", "image", "font", "rhi", "stream", "filesystem", "renderer", "serialization", "reflection", "NKMedia")
+    windowedapp()
+    language("C++")
+    cppdialect("C++17")
+    location(".")
 
-SOUS_WINDOWS = (os.name == "nt")
-SYSTEME = "Windows" if SOUS_WINDOWS else "Linux"
-EXTENSION = ".lib" if SOUS_WINDOWS else ".a"
+    files(["main.cpp"])
 
-MODULES = [
-    ("NKWindow",     "Kernel/Runtime"),
-    ("NKEvent",      "Kernel/Runtime"),
-    ("NKTime",       "Kernel/System"),
-    ("NKFileSystem", "Kernel/System"),
-    ("NKLogger",     "Kernel/System"),
-    ("NKThreading",  "Kernel/System"),
-    ("NKMath",       "Kernel/Foundation"),
-    ("NKContainers", "Kernel/Foundation"),
-    ("NKMemory",     "Kernel/Foundation"),
-    ("NKCore",       "Kernel/Foundation"),
-    ("NKPlatform",   "Kernel/Foundation"),
-]
+    _INCLUDE_DIRS = [
+        ".",
+        "%{wks.location}/Externals",
+        "%{NKGlad.location}/include",
+        "%{NKEvent.location}/src",
+        "%{NKWindow.location}/src",
+        "%{NKLogger.location}/src",
+        "%{NKCore.location}/src",
+        "%{NKPlatform.location}/src",
+        "%{NKMath.location}/src",
+        "%{NKTime.location}/src",
+        "%{NKStream.location}/src",
+        "%{NKFileSystem.location}/src",
+        "%{NKMemory.location}/src",
+        "%{NKContainers.location}/src",
+        "%{NKThreading.location}/src",
+        "%{NKRHI.location}/src",
+        "%{NKSL.location}/src",
+        "%{NKRenderer.location}/src",
+        "%{NKSerialization.location}/src",
+        "%{NKReflection.location}/src",
+        "%{NKMedia.location}/src",
+        "%{NKImage.location}/src",
+        "%{NKFont.location}/src",
+    ]
+    if VULKAN_INCLUDE:
+        _INCLUDE_DIRS.append(VULKAN_INCLUDE)
+    includedirs(_INCLUDE_DIRS)
 
-def bibliotheques(configuration):
-    dossier = f"{NK}/Build/Lib/{configuration}-{SYSTEME}"
-    return [f"{dossier}/{nom}{EXTENSION}" for nom, _ in MODULES]
+    _BASE_LINKS = [
+        "NKMedia",
+        "NKEvent", "NKWindow", "NKGlad", "NKLogger",
+        "NKMath", "NKTime", "NKStream", "NKFileSystem",
+        "NKContainers", "NKMemory", "NKCore", "NKPlatform", "NKThreading", "NKRHI", "NKRenderer", "NKSL",
+        "NKSerialization", "NKReflection", "NKImage", "NKFont",
+        "NKAnima",
+    ]
+    if USE_NKGLSLANG:
+        _BASE_LINKS.append("NKGLSlang")
+    if USE_NKSPIRVCROSS:
+        _BASE_LINKS.append("NKSPIRVCross")
 
-with workspace("MaSalleWks", location="."):
-    configurations(["Debug", "Release"])
+    links(_BASE_LINKS)
+    dependson(_BASE_LINKS)
+    defines([
+        f"NKENTSEU_ENABLE_VULKAN_BACKEND={1 if WANT_VULKAN else 0}",
+        "NKENTSEU_SERIALIZATION_STATIC_LIB",
+    ])
 
-    with project("MaSalle"):
-        windowedapp()
-        language("C++")
-        cppdialect("C++17")
-        location(".")
-        files(["main.cpp"])
-
-        objdir("Build/Obj/%{cfg.buildcfg}-%{cfg.system}/%{prj.name}")
-        targetdir("Build/Bin/%{cfg.buildcfg}-%{cfg.system}/%{prj.name}")
-
-        includedirs([f"{NK}/{dossier}/{nom}/src" for nom, dossier in MODULES])
-
-        defines([f"NKENTSEU_{nom[2:].upper()}_STATIC_LIB" for nom, _ in MODULES])
-
-        for configuration in ["Debug", "Release"]:
-            with filter(f"config:{configuration}"):
-                links(bibliotheques(configuration))
-
-        with filter("system:Windows"):
-            defines(["WIN32_LEAN_AND_MEAN", "_UNICODE", "UNICODE"])
-            links(["user32", "gdi32", "opengl32", "dwmapi", "shell32", "comdlg32",
-                   "mf", "mfplat", "mfreadwrite", "mfuuid", "uuid", "ole32",
-                   "oleaut32", "dinput8", "dxguid", "winmm", "uxtheme", "psapi",
-                   "advapi32", "wbemuuid"])
-
-        with filter("system:Linux"):
-            defines(["NKENTSEU_FORCE_WINDOWING_XLIB_ONLY"])
-            links(["pthread", "X11", "Xrandr", "GL"])
+    objdir("%{wks.location}/Build/Obj/%{cfg.buildcfg}-%{cfg.system}/%{prj.name}")
