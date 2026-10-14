@@ -1,5 +1,5 @@
-Un par un :  cubes, drawCalls = ,  images/s. 
+Un par un : 1200 cubes, drawCalls = 7202, 50 images/s. 1024 cubes tournaient encore à  64,1 images/s : le seuil est entre 1024 et 1200 cubes. La salle seule tourne à 144 images/s (vsync de l'écran).
 
-Groupés : drawCalls = ,  images/s pour les  cubes, nouveau seuil :  cubes.
+Groupés : drawCalls = 7202, 144 images/s pour les 1200 cubes, nouveau seuil : 5000 cubes (46 et 47.6 images/s sur deux mesures de 400 images, drawCalls = 24572). La cadence est instable prés du seuil : 5000 cubes ont donné 54 puis 63,9 images/s. drawCalls est identique en un par un et en groupé pour un méme nombre de cubes (6 x cubes + 2) ; il plafonne à 24572 à partir de 4095 cubes, o le moteur signale ObjectUBO pool overflow (instanced) avec max=4096.
 
 Trouvé : NkDrawCallInstanced (soumis avec NkRender3D::SubmitInstanced), déclaré dans NKRenderer/Core/NkRendererTypes.h ; la fonction de soumission est déclarée dans NKRenderer/Tools/Render3D/NkRender3D.h.
