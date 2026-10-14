@@ -1,0 +1,3 @@
+﻿Facteur : La translation est multipliée, axe par axe, par l'échelle. Pour le mur du fond, l'échelle vaut (4,2 ; 2,5 ; 0,1), donc x est multiplié par 4,2 (sans effet, car x vaut 0), y par 2,5 (1,25 devient 3,125) et z par 0,1 (-2,05 devient -0,205).
+
+Pourquoi : Avec Scale * Translate, la translation est appliquée d'abord, puis l'échelle agit sur tout, y compris sur le décalage : la position devient échelle × position. Avec Translate * Scale, l'échelle agit d'abord sur le cube centré à l'origine, puis la translation le déplace, sans être mise à l'échelle. Les matrices ne commutent pas : changer l'ordre change le résultat, sans aucun message d'erreur.
