@@ -96,6 +96,7 @@ int nkmain(const NkEntryState &state) {
         sun.direction = {-0.4f, -1.f, -0.3f};
         sun.color = {1.f, 0.95f, 0.85f};
         sun.intensity = 3.f;
+		sun.castShadow = false;
         sctx.lights.PushBack(sun);
 
         r3d->BeginScene(sctx);
