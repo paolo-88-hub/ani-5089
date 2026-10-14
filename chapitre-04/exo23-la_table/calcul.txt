@@ -1,0 +1,5 @@
+Plateau :
+Le dessus du plateau est à 0,75 m et le plateau est épais de 0,05 m. Le centre est à mi-épaisseur sous le dessus : y = 0,75 - 0,05 / 2 = 0,75 - 0,025 = 0,725 m.
+
+Pieds :
+Un pied va du sol (y = 0) au dessous du plateau (y = 0,75 - 0,05 = 0,70). Sa hauteur est donc 0,70 m, et son centre est à mi-hauteur : y = 0,70 / 2 = 0,35 m. Les pieds sont aux coins, sous le plateau : leur centre est décalé de 1,20 / 2 - 0,06 / 2 = 0,57 m en x et de 0,80 / 2 - 0,06 / 2 = 0,37 m en z par rapport au centre de la table (x = 0,60, z = 0,70).
