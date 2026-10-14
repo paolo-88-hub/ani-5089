@@ -1,0 +1,5 @@
+Avant : 38
+
+Après : 38
+
+Comptage : J'ai compté les lignes non vides et hors commentaires qui construisent les objets de la salle, accolades seules comprises : la fonction cube (10 lignes), centreMur et longueur (2), le sol en plan (10), les 5 murs et le plafond (5), posPanneau (1), la porte (1), les 2 fenêtres (2), le plateau (1) et les quatre pieds avec leurs deux boucles (6). Avant, ce bloc était réparti entre ouvertures.cpp et table.cpp ; je l'ai fusionné et la fonction cube n'est comptée qu'une fois. Après, j'ai compté le même bloc, avec la fonction objet à la place de cube. J'ai laissé de côté la fenêtre, le périphérique, le renderer, la caméra, les lumières, les constantes, les deux définitions PoserAuSol et PoserSurTable (5 lignes chacune), et le vase sur la table, qui n'existait pas avant. Le sol en plan, le plafond, les fenêtres et le plateau ne passent pas par PoserAuSol car ils ne reposent pas sur le sol.
