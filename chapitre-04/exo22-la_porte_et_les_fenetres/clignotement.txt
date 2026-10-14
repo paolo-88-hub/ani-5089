@@ -1,0 +1,8 @@
+Constat :
+Avec les panneaux poses exactement dans le plan du mur, la porte n'apparaissait pas comme un rectangle plein : on voyait un nuage de points marron au pied du coin, et les deux fenétres bleues etaient couvertes de grain. Quand la camera balanéait, les pixels bougeaient d'une image a l'autre : la porte et les fenétres clignotaient, parce que certains pixels montraient le panneau et d'autres le mur.
+
+Nom :
+Ce defaut s'appelle le z-fighting (conflit de profondeur). Il vient du fait que le panneau et le mur sont a la meme distance de la camera : le tampon de profondeur ne peut pas les departager, car leurs profondeurs sont egales a la precision pres. A chaque position de la camera, l'arrondi tombe d'un cote ou de l'autre, donc le pixel change de surface et l'image scintille.
+
+Réglage :
+J'ai avance les trois panneaux de 0,00009 m (0,09 mm) vers l'interieur de la piece. Pas moins : a 0,00005 l'image etait propre, mais a 0,00004 et 0,00003 les pixels clignotaient encore, donc le seuil est entre 0,00004 et 0,00005 ; j'ai pris environ le double pour garder une marge. Pas plus : a 0,10 m on voit que le panneau ressort du mur au lieu d'etre plaque dessus, donc il ne doit pas etre avance plus qu'il n'est necessaire pour departager les deux surfaces.
