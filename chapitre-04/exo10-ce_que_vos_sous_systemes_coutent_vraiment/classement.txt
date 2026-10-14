@@ -1,0 +1,21 @@
+﻿Mesure : moyenne sur 400 images (30 images d'échauffement exclues), en Release, DirectX 11, salle de six cubes et un plan.
+Image complète : 6937 us pour tous les sous-systèmes, plafonnée par l'écran à 144 Hz (synchronisation verticale), donc inutilisable pour les départager. Le classement utilise le temps CPU de l'image, de BeginFrame à juste avant Present (lignes NOM_CPU de mesures.txt).
+Référence : NK_SS_RENDER3D seul = 218 us de CPU par image.
+
+1. NK_SS_SIMULATION : +1 us par rapport au rendu 3D seul (219 us de CPU au total)
+2. NK_SS_RENDER2D : -2 us par rapport au rendu 3D seul (216 us de CPU au total)
+3. NK_SS_3D_BASE : -2 us par rapport au rendu 3D seul (216 us de CPU au total)
+4. NK_SS_DEBUG : -3 us par rapport au rendu 3D seul (215 us de CPU au total)
+5. NK_SS_POST_PROCESS : -3 us par rapport au rendu 3D seul (215 us de CPU au total)
+6. NK_SS_TEXT : -5 us par rapport au rendu 3D seul (213 us de CPU au total)
+7. NK_SS_VFX : -12 us par rapport au rendu 3D seul (206 us de CPU au total)
+8. NK_SS_UI : -13 us par rapport au rendu 3D seul (205 us de CPU au total)
+9. NK_SS_ANIMATION : -16 us par rapport au rendu 3D seul (202 us de CPU au total)
+10. NK_SS_OVERLAY : -16 us par rapport au rendu 3D seul (202 us de CPU au total)
+11. NK_SS_OFFSCREEN : -17 us par rapport au rendu 3D seul (201 us de CPU au total)
+12. NK_SS_2D_ESSENTIALS : -18 us par rapport au rendu 3D seul (200 us de CPU au total)
+13. NK_SS_SHADOW : -24 us par rapport au rendu 3D seul (194 us de CPU au total)
+14. NK_SS_GPU_CULLING : -25 us par rapport au rendu 3D seul (193 us de CPU au total)
+15. NK_SS_RAYTRACING : -26 us par rapport au rendu 3D seul (192 us de CPU au total)
+
+Remarque : tous les écarts, de -26 à +1 us, sont dans le bruit de mesure. Aucun sous-système n'a de coût mesurable par image dans cette salle fixe ; un surcoût négatif est du bruit, pas un gain.
