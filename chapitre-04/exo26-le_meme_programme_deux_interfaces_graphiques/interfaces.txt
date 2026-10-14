@@ -1,0 +1,5 @@
+Première : refus [A COMPLETER : message de la console ou de logs/app.log]
+
+Seconde : OpenGL 6.94 ms
+
+Différences : Sur premiere.png (rendu logiciel), la salle est surexposée : les surfaces virent au blanc pur ou au noir sans nuances et les couleurs de la table et du cube sont délavées. La porte est striée d'artefacts orange et des points isolés apparaissent le long des arêtes. L'image est à l'endroit. Sur seconde.png (OpenGL), les couleurs sont fidèles (murs beiges, fenêtres bleues, porte marron, table orange, cube bleu) et les arêtes sont nettes, mais l'image est renversée verticalement : on voit la table par en dessous, avec le sol en haut. Le temps par image est aussi très différent entre les deux.
