@@ -1,0 +1,5 @@
+Un par un :  cubes, drawCalls = ,  images/s. 
+
+Groupés : drawCalls = ,  images/s pour les  cubes, nouveau seuil :  cubes.
+
+Trouvé : NkDrawCallInstanced (soumis avec NkRender3D::SubmitInstanced), déclaré dans NKRenderer/Core/NkRendererTypes.h ; la fonction de soumission est déclarée dans NKRenderer/Tools/Render3D/NkRender3D.h.
