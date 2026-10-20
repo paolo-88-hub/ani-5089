@@ -1,0 +1,1176 @@
+﻿== ARBORESCENCE chapitre-04 ==
+C:\Users\PAOLO\ani-5089\chapitre-04\exo21-un_cube_et_rien_d_autre\cube.cpp
+C:\Users\PAOLO\ani-5089\chapitre-04\exo21-un_cube_et_rien_d_autre\cube.png
+C:\Users\PAOLO\ani-5089\chapitre-04\exo21-un_cube_et_rien_d_autre\diagnostic.txt
+C:\Users\PAOLO\ani-5089\chapitre-04\exo22-la_porte_et_les_fenetres\clignotement.txt
+C:\Users\PAOLO\ani-5089\chapitre-04\exo22-la_porte_et_les_fenetres\ouvertures.cpp
+C:\Users\PAOLO\ani-5089\chapitre-04\exo22-la_porte_et_les_fenetres\ouvertures.png
+C:\Users\PAOLO\ani-5089\chapitre-04\exo23-la_table\calcul.txt
+C:\Users\PAOLO\ani-5089\chapitre-04\exo23-la_table\table.cpp
+C:\Users\PAOLO\ani-5089\chapitre-04\exo23-la_table\table.png
+C:\Users\PAOLO\ani-5089\chapitre-04\exo24-deux_fonctions_qui_vous_feront_gagner_du_temps\lignes.txt
+C:\Users\PAOLO\ani-5089\chapitre-04\exo24-deux_fonctions_qui_vous_feront_gagner_du_temps\poser.cpp
+C:\Users\PAOLO\ani-5089\chapitre-04\exo24-deux_fonctions_qui_vous_feront_gagner_du_temps\poser.png
+C:\Users\PAOLO\ani-5089\chapitre-04\exo25-la_lumiere_qui_change_tout\depart.png
+C:\Users\PAOLO\ani-5089\chapitre-04\exo25-la_lumiere_qui_change_tout\direction.png
+C:\Users\PAOLO\ani-5089\chapitre-04\exo25-la_lumiere_qui_change_tout\intensite.png
+C:\Users\PAOLO\ani-5089\chapitre-04\exo25-la_lumiere_qui_change_tout\lisibilite.txt
+C:\Users\PAOLO\ani-5089\chapitre-04\exo25-la_lumiere_qui_change_tout\lumiere.cpp
+C:\Users\PAOLO\ani-5089\chapitre-04\exo25-la_lumiere_qui_change_tout\ombres.png
+
+== CODE DES DERNIERS EXERCICES (.cpp) ==
+
+--- C:\Users\PAOLO\ani-5089\chapitre-04\exo24-deux_fonctions_qui_vous_feront_gagner_du_temps\poser.cpp ---
+// poser.cpp : salle 4 m x 4 m (porte, fenetres, table) avec PoserAuSol / PoserSurTable
+#include "NKPlatform/NkPlatformDetect.h"
+#include "NKWindow/NKMain.h"
+#include "NKWindow/Core/NkWindow.h"
+#include "NKWindow/Core/NkWindowConfig.h"
+#include "NKEvent/NkWindowEvent.h"
+#include "NKEvent/NkKeyboardEvent.h"
+#include "NKLogger/NkLog.h"
+
+#include "NKRHI/Core/NkDeviceFactory.h"
+#include "NKRenderer/NkRenderer.h"
+#include "NKRenderer/Core/NkCamera.h"
+#include "NKRenderer/Mesh/NkMeshSystem.h"
+#include "NKRenderer/Tools/Render3D/NkRender3D.h"
+
+using namespace nkentseu;
+using namespace nkentseu::renderer;
+
+// --- Salle (en metres) ---
+static const float INTERIEUR = 2.00f;
+static const float EP_MUR = 0.10f;
+static const float HAUTEUR = 2.50f;
+static const float PANNEAU = 0.02f;
+static const float AVANCE = 0.00009f;
+
+// --- Table (en metres) ---
+static const float LONGUEUR = 1.20f;
+static const float PROFONDEUR = 0.80f;
+static const float EP_PLATEAU = 0.05f;
+static const float DESSUS = 0.75f;
+static const float PIED = 0.06f;
+static const float TABLE_X = 0.60f;
+static const float TABLE_Z = 0.70f;
+static const float PLATEAU_Y = DESSUS - EP_PLATEAU * 0.5f;
+static const float PIED_H = DESSUS - EP_PLATEAU;
+static const float PIED_DX = LONGUEUR * 0.5f - PIED * 0.5f;
+static const float PIED_DZ = PROFONDEUR * 0.5f - PIED * 0.5f;
+
+// --- Les deux fonctions ---
+// Le cube du moteur est unitaire et centre : apres l'echelle, sa hauteur est taille.y,
+// donc le centre est monte de taille.y / 2. Translation a gauche : elle agit apres l'echelle.
+NkMat4f PoserAuSol(NkVec3f taille, float x, float z) {
+    return NkMat4f::Translate({x, taille.y * 0.5f, z})
+         * NkMat4f::Scale(taille);
+}
+
+NkMat4f PoserSurTable(NkVec3f taille, float x, float z) {
+    return NkMat4f::Translate({x, 0.75f + taille.y * 0.5f, z})
+         * NkMat4f::Scale(taille);
+}
+
+static void ConfigureAppData(NkAppData &d) {
+    d.appName = "ExoPoser";
+}
+NK_REGISTER_ENTRY_APPDATA_UPDATER(ConfigureAppData)
+
+int nkmain(const NkEntryState &state) {
+    (void)state;
+
+    NkWindowConfig winCfg;
+    winCfg.title = "La salle";
+    winCfg.width = 1280;
+    winCfg.height = 720;
+    winCfg.centered = true;
+
+    NkWindow window(winCfg);
+    if (!window.IsValid()) {
+        logger.Error("[Poser] Creation fenetre KO");
+        return 1;
+    }
+
+    NkDeviceInitInfo devInfo{};
+    devInfo.surface = window.GetSurfaceDesc();
+    devInfo.width = (uint32)window.GetSize().width;
+    devInfo.height = (uint32)window.GetSize().height;
+
+    NkIDevice *device = NkDeviceFactory::CreateAutoDetect(devInfo);
+    if (!device || !device->IsValid()) {
+        logger.Error("[Poser] Creation device KO");
+        window.Close();
+        return 2;
+    }
+    logger.Info("[Poser] Backend : {0}", NkGraphicsApiName(device->GetApi()));
+
+    NkRendererConfig cfg = NkRendererConfig::ForGame(devInfo.api, devInfo.width, devInfo.height);
+    cfg.subsystems = NK_SS_RENDER3D;
+    NkRenderer *renderer = NkRenderer::Create(device, cfg);
+    if (!renderer || !renderer->Initialize()) {
+        logger.Error("[Poser] Init renderer KO");
+        NkRenderer::Destroy(renderer);
+        NkDeviceFactory::Destroy(device);
+        window.Close();
+        return 3;
+    }
+
+    NkRender3D *r3d = renderer->GetRender3D();
+    NkMeshHandle meshCube = renderer->GetMeshSystem()->GetCube();
+    NkMeshHandle meshPlane = renderer->GetMeshSystem()->GetPlane();
+
+    bool running = true;
+    uint32 W = devInfo.width;
+    uint32 H = devInfo.height;
+    NkEventSystem &events = NkEvents();
+    events.AddEventCallback<NkWindowCloseEvent>([&](NkWindowCloseEvent *) { running = false; });
+    events.AddEventCallback<NkKeyPressEvent>([&](NkKeyPressEvent *e) {
+        if (e->GetKey() == NkKey::NK_ESCAPE)
+            running = false;
+    });
+
+    while (running && window.IsOpen()) {
+        events.PollEvents();
+        if (!renderer->BeginFrame())
+            continue;
+
+        NkCamera3DData camData;
+        camData.up = {0.f, 1.f, 0.f};
+        camData.fovY = 70.f;
+        camData.aspect = (float32)W / (float32)H;
+        camData.nearPlane = 0.05f;
+        camData.farPlane = 200.f;
+        NkCamera3D cam(camData);
+        cam.SetPosition({1.7f, 1.70f, 1.7f});
+        cam.SetTarget({-0.3f, 0.8f, -0.3f});
+
+        NkSceneContext sctx;
+        sctx.camera = cam;
+
+        NkLightDesc sun;
+        sun.type = NkLightType::NK_DIRECTIONAL;
+        sun.direction = {-0.4f, -1.f, -0.3f};
+        sun.color = {1.f, 0.95f, 0.85f};
+        sun.intensity = 3.f;
+        sun.castShadow = false;
+        sctx.lights.PushBack(sun);
+
+        NkLightDesc fill;
+        fill.type = NkLightType::NK_DIRECTIONAL;
+        fill.direction = {-0.6f, -0.3f, -0.8f};
+        fill.color = {1.f, 1.f, 1.f};
+        fill.intensity = 2.f;
+        fill.castShadow = false;
+        sctx.lights.PushBack(fill);
+
+        r3d->BeginScene(sctx);
+
+        // ===== DEBUT DU BLOC COMPTE =====
+        // Un cube de matrice m, de dimensions t, dont le centre est en (x, z) et le bas a yBas.
+        auto objet = [&](const NkMat4f &m, NkVec3f t, float x, float yBas, float z, float r, float g, float b) {
+            NkDrawCall3D dc;
+            dc.mesh = meshCube;
+            dc.transform = m;
+            dc.aabb = {{x - t.x * 0.5f, yBas, z - t.z * 0.5f}, {x + t.x * 0.5f, yBas + t.y, z + t.z * 0.5f}};
+            dc.tint = {r, g, b};
+            dc.metallic = 0.f;
+            dc.roughness = 0.9f;
+            r3d->Submit(dc);
+        };
+
+        const float centreMur = INTERIEUR + EP_MUR * 0.5f;
+        const float longueur = 2.f * INTERIEUR + 2.f * EP_MUR;
+
+        // Sol : un plan, pas de demi-hauteur, il ne passe pas par PoserAuSol
+        {
+            NkDrawCall3D dc;
+            dc.mesh = meshPlane;
+            dc.transform = NkMat4f::Scale({INTERIEUR, 1.f, INTERIEUR});
+            dc.aabb = {{-INTERIEUR, 0.f, -INTERIEUR}, {INTERIEUR, 0.f, INTERIEUR}};
+            dc.tint = {0.30f, 0.30f, 0.33f};
+            dc.metallic = 0.f;
+            dc.roughness = 0.9f;
+            r3d->Submit(dc);
+        }
+
+        // Murs (au sol) et plafond (en hauteur, transformation explicite)
+        objet(PoserAuSol({longueur, HAUTEUR, EP_MUR}, 0.f, -centreMur), {longueur, HAUTEUR, EP_MUR}, 0.f, 0.f, -centreMur, 0.72f, 0.70f, 0.66f);
+        objet(PoserAuSol({longueur, HAUTEUR, EP_MUR}, 0.f, centreMur), {longueur, HAUTEUR, EP_MUR}, 0.f, 0.f, centreMur, 0.72f, 0.70f, 0.66f);
+        objet(PoserAuSol({EP_MUR, HAUTEUR, 2.f * INTERIEUR}, -centreMur, 0.f), {EP_MUR, HAUTEUR, 2.f * INTERIEUR}, -centreMur, 0.f, 0.f, 0.72f, 0.70f, 0.66f);
+        objet(PoserAuSol({EP_MUR, HAUTEUR, 2.f * INTERIEUR}, centreMur, 0.f), {EP_MUR, HAUTEUR, 2.f * INTERIEUR}, centreMur, 0.f, 0.f, 0.72f, 0.70f, 0.66f);
+        objet(NkMat4f::Translate({0.f, HAUTEUR + EP_MUR * 0.5f, 0.f}) * NkMat4f::Scale({longueur, EP_MUR, longueur}), {longueur, EP_MUR, longueur}, 0.f, HAUTEUR, 0.f, 0.85f, 0.85f, 0.85f);
+
+        const float posPanneau = INTERIEUR + PANNEAU * 0.5f - AVANCE;
+
+        // Porte : posee au sol, mur du fond
+        objet(PoserAuSol({0.90f, 2.00f, PANNEAU}, -0.70f, -posPanneau), {0.90f, 2.00f, PANNEAU}, -0.70f, 0.f, -posPanneau, 0.45f, 0.28f, 0.15f);
+
+        // Fenetres : centre a 1,40 m du sol, donc pas au sol (transformation explicite)
+        objet(NkMat4f::Translate({-posPanneau, 1.40f, -0.90f}) * NkMat4f::Scale({PANNEAU, 1.00f, 1.20f}), {PANNEAU, 1.00f, 1.20f}, -posPanneau, 0.90f, -0.90f, 0.55f, 0.75f, 0.95f);
+        objet(NkMat4f::Translate({-posPanneau, 1.40f, 0.90f}) * NkMat4f::Scale({PANNEAU, 1.00f, 1.20f}), {PANNEAU, 1.00f, 1.20f}, -posPanneau, 0.90f, 0.90f, 0.55f, 0.75f, 0.95f);
+
+        // Plateau : il porte les objets, il ne repose pas sur le sol (transformation explicite)
+        objet(NkMat4f::Translate({TABLE_X, PLATEAU_Y, TABLE_Z}) * NkMat4f::Scale({LONGUEUR, EP_PLATEAU, PROFONDEUR}), {LONGUEUR, EP_PLATEAU, PROFONDEUR}, TABLE_X, DESSUS - EP_PLATEAU, TABLE_Z, 0.62f, 0.42f, 0.22f);
+
+        // Quatre pieds, au sol
+        const float signes[2] = {-1.f, 1.f};
+        for (int i = 0; i < 2; ++i) {
+            for (int j = 0; j < 2; ++j) {
+                objet(PoserAuSol({PIED, PIED_H, PIED}, TABLE_X + signes[i] * PIED_DX, TABLE_Z + signes[j] * PIED_DZ), {PIED, PIED_H, PIED}, TABLE_X + signes[i] * PIED_DX, 0.f, TABLE_Z + signes[j] * PIED_DZ, 0.40f, 0.26f, 0.14f);
+            }
+        }
+        // ===== FIN DU BLOC COMPTE =====
+
+        // Objet pose sur la table (hors comptage : il n'existait pas avant)
+        objet(PoserSurTable({0.20f, 0.30f, 0.20f}, TABLE_X, TABLE_Z), {0.20f, 0.30f, 0.20f}, TABLE_X, DESSUS, TABLE_Z, 0.20f, 0.45f, 0.70f);
+
+        renderer->Present();
+        renderer->EndFrame();
+    }
+
+    device->WaitIdle();
+    NkRenderer::Destroy(renderer);
+    NkDeviceFactory::Destroy(device);
+    window.Close();
+    return 0;
+}
+
+--- C:\Users\PAOLO\ani-5089\chapitre-04\exo25-la_lumiere_qui_change_tout\lumiere.cpp ---
+// lumiere.cpp : meme salle que poser.cpp, un seul soleil, trois reglages essayes un par un.
+// Choix de l'essai par la variable d'environnement NK_LUMIERE :
+//   depart | direction | intensite | ombres   (defaut : depart)
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdlib>
+#include <cstring>
+
+#include "NKPlatform/NkPlatformDetect.h"
+#include "NKWindow/NKMain.h"
+#include "NKWindow/Core/NkWindow.h"
+#include "NKWindow/Core/NkWindowConfig.h"
+#include "NKEvent/NkWindowEvent.h"
+#include "NKEvent/NkKeyboardEvent.h"
+#include "NKLogger/NkLog.h"
+
+#include "NKRHI/Core/NkDeviceFactory.h"
+#include "NKRenderer/NkRenderer.h"
+#include "NKRenderer/Core/NkCamera.h"
+#include "NKRenderer/Mesh/NkMeshSystem.h"
+#include "NKRenderer/Tools/Render3D/NkRender3D.h"
+
+using namespace nkentseu;
+using namespace nkentseu::renderer;
+
+// --- Salle (en metres) ---
+static const float INTERIEUR = 2.00f;
+static const float EP_MUR = 0.10f;
+static const float HAUTEUR = 2.50f;
+static const float PANNEAU = 0.02f;
+static const float AVANCE = 0.00009f;
+
+// --- Table (en metres) ---
+static const float LONGUEUR = 1.20f;
+static const float PROFONDEUR = 0.80f;
+static const float EP_PLATEAU = 0.05f;
+static const float DESSUS = 0.75f;
+static const float PIED = 0.06f;
+static const float TABLE_X = 0.60f;
+static const float TABLE_Z = 0.70f;
+static const float PLATEAU_Y = DESSUS - EP_PLATEAU * 0.5f;
+static const float PIED_H = DESSUS - EP_PLATEAU;
+static const float PIED_DX = LONGUEUR * 0.5f - PIED * 0.5f;
+static const float PIED_DZ = PROFONDEUR * 0.5f - PIED * 0.5f;
+
+// --- Reglages du soleil : le depart, puis un seul changement par essai ---
+static const NkVec3f SOLEIL_DIRECTION_DEPART = {-0.4f, -1.f, -0.3f};
+static const NkVec3f SOLEIL_DIRECTION_ESSAI = {0.5f, -0.8f, 0.4f}; // essai 1 : le soleil vient de l'autre cote
+static const float SOLEIL_INTENSITE_DEPART = 3.f;
+static const float SOLEIL_INTENSITE_ESSAI = 0.6f; // essai 2 : intensite divisee par 5
+static const bool SOLEIL_OMBRES_DEPART = true;
+static const bool SOLEIL_OMBRES_ESSAI = false; // essai 3 : ombres coupees
+
+NkMat4f PoserAuSol(NkVec3f taille, float x, float z) {
+    return NkMat4f::Translate({x, taille.y * 0.5f, z})
+         * NkMat4f::Scale(taille);
+}
+
+NkMat4f PoserSurTable(NkVec3f taille, float x, float z) {
+    return NkMat4f::Translate({x, 0.75f + taille.y * 0.5f, z})
+         * NkMat4f::Scale(taille);
+}
+
+static void ConfigureAppData(NkAppData &d) {
+    d.appName = "ExoLumiere";
+}
+NK_REGISTER_ENTRY_APPDATA_UPDATER(ConfigureAppData)
+
+int nkmain(const NkEntryState &state) {
+    (void)state;
+
+    const char *envVar = std::getenv("NK_LUMIERE");
+    const char *variante = (envVar && *envVar) ? envVar : "depart";
+    const bool essaiDirection = std::strcmp(variante, "direction") == 0;
+    const bool essaiIntensite = std::strcmp(variante, "intensite") == 0;
+    const bool essaiOmbres = std::strcmp(variante, "ombres") == 0;
+
+    NkWindowConfig winCfg;
+    winCfg.title = "La salle";
+    winCfg.width = 1280;
+    winCfg.height = 720;
+    winCfg.centered = true;
+
+    NkWindow window(winCfg);
+    if (!window.IsValid()) {
+        logger.Error("[Lumiere] Creation fenetre KO");
+        return 1;
+    }
+
+    NkDeviceInitInfo devInfo{};
+    devInfo.surface = window.GetSurfaceDesc();
+    devInfo.width = (uint32)window.GetSize().width;
+    devInfo.height = (uint32)window.GetSize().height;
+
+    NkIDevice *device = NkDeviceFactory::CreateAutoDetect(devInfo);
+    if (!device || !device->IsValid()) {
+        logger.Error("[Lumiere] Creation device KO");
+        window.Close();
+        return 2;
+    }
+    logger.Info("[Lumiere] Backend : {0}", NkGraphicsApiName(device->GetApi()));
+    logger.Info("[Lumiere] Variante : {0}", variante);
+
+    NkRendererConfig cfg = NkRendererConfig::ForGame(devInfo.api, devInfo.width, devInfo.height);
+    // Les ombres ne sont calculees que si NK_SS_SHADOW est allume en plus de NK_SS_RENDER3D.
+    cfg.subsystems = NK_SS_RENDER3D | NK_SS_SHADOW;
+    NkRenderer *renderer = NkRenderer::Create(device, cfg);
+    if (!renderer || !renderer->Initialize()) {
+        logger.Error("[Lumiere] Init renderer KO");
+        NkRenderer::Destroy(renderer);
+        NkDeviceFactory::Destroy(device);
+        window.Close();
+        return 3;
+    }
+
+    NkRender3D *r3d = renderer->GetRender3D();
+    NkMeshHandle meshCube = renderer->GetMeshSystem()->GetCube();
+    NkMeshHandle meshPlane = renderer->GetMeshSystem()->GetPlane();
+
+    bool running = true;
+    uint32 W = devInfo.width;
+    uint32 H = devInfo.height;
+    NkEventSystem &events = NkEvents();
+    events.AddEventCallback<NkWindowCloseEvent>([&](NkWindowCloseEvent *) { running = false; });
+    events.AddEventCallback<NkKeyPressEvent>([&](NkKeyPressEvent *e) {
+        if (e->GetKey() == NkKey::NK_ESCAPE)
+            running = false;
+    });
+
+    while (running && window.IsOpen()) {
+        events.PollEvents();
+        if (!renderer->BeginFrame())
+            continue;
+
+        // Camera immobile : la meme pour toutes les captures
+        NkCamera3DData camData;
+        camData.up = {0.f, 1.f, 0.f};
+        camData.fovY = 70.f;
+        camData.aspect = (float32)W / (float32)H;
+        camData.nearPlane = 0.05f;
+        camData.farPlane = 200.f;
+        NkCamera3D cam(camData);
+        cam.SetPosition({1.7f, 1.70f, 1.7f});
+        cam.SetTarget({-0.3f, 0.8f, -0.3f});
+
+        NkSceneContext sctx;
+        sctx.camera = cam;
+
+        // Le soleil : un seul reglage change par rapport au depart
+        NkLightDesc sun;
+        sun.type = NkLightType::NK_DIRECTIONAL;
+        sun.direction = essaiDirection ? SOLEIL_DIRECTION_ESSAI : SOLEIL_DIRECTION_DEPART;
+        sun.color = {1.f, 0.95f, 0.85f};
+        sun.intensity = essaiIntensite ? SOLEIL_INTENSITE_ESSAI : SOLEIL_INTENSITE_DEPART;
+        sun.castShadow = essaiOmbres ? SOLEIL_OMBRES_ESSAI : SOLEIL_OMBRES_DEPART;
+        sctx.lights.PushBack(sun);
+
+        r3d->BeginScene(sctx);
+
+        // projette = false pour le plafond : sinon il bloque le soleil et toute la salle est dans l'ombre
+        auto objet = [&](const NkMat4f &m, NkVec3f t, float x, float yBas, float z, float r, float g, float b, bool projette = true) {
+            NkDrawCall3D dc;
+            dc.mesh = meshCube;
+            dc.transform = m;
+            dc.aabb = {{x - t.x * 0.5f, yBas, z - t.z * 0.5f}, {x + t.x * 0.5f, yBas + t.y, z + t.z * 0.5f}};
+            dc.tint = {r, g, b};
+            dc.metallic = 0.f;
+            dc.roughness = 0.9f;
+            dc.castShadow = projette;
+            r3d->Submit(dc);
+        };
+
+        const float centreMur = INTERIEUR + EP_MUR * 0.5f;
+        const float longueur = 2.f * INTERIEUR + 2.f * EP_MUR;
+
+        // Sol
+        {
+            NkDrawCall3D dc;
+            dc.mesh = meshPlane;
+            dc.transform = NkMat4f::Scale({INTERIEUR, 1.f, INTERIEUR});
+            dc.aabb = {{-INTERIEUR, 0.f, -INTERIEUR}, {INTERIEUR, 0.f, INTERIEUR}};
+            dc.tint = {0.30f, 0.30f, 0.33f};
+            dc.metallic = 0.f;
+            dc.roughness = 0.9f;
+            r3d->Submit(dc);
+        }
+
+        // Murs et plafond
+        objet(PoserAuSol({longueur, HAUTEUR, EP_MUR}, 0.f, -centreMur), {longueur, HAUTEUR, EP_MUR}, 0.f, 0.f, -centreMur, 0.72f, 0.70f, 0.66f);
+        objet(PoserAuSol({longueur, HAUTEUR, EP_MUR}, 0.f, centreMur), {longueur, HAUTEUR, EP_MUR}, 0.f, 0.f, centreMur, 0.72f, 0.70f, 0.66f);
+        objet(PoserAuSol({EP_MUR, HAUTEUR, 2.f * INTERIEUR}, -centreMur, 0.f), {EP_MUR, HAUTEUR, 2.f * INTERIEUR}, -centreMur, 0.f, 0.f, 0.72f, 0.70f, 0.66f);
+        objet(PoserAuSol({EP_MUR, HAUTEUR, 2.f * INTERIEUR}, centreMur, 0.f), {EP_MUR, HAUTEUR, 2.f * INTERIEUR}, centreMur, 0.f, 0.f, 0.72f, 0.70f, 0.66f);
+        objet(NkMat4f::Translate({0.f, HAUTEUR + EP_MUR * 0.5f, 0.f}) * NkMat4f::Scale({longueur, EP_MUR, longueur}), {longueur, EP_MUR, longueur}, 0.f, HAUTEUR, 0.f, 0.85f, 0.85f, 0.85f, false);
+
+        const float posPanneau = INTERIEUR + PANNEAU * 0.5f - AVANCE;
+
+        // Porte
+        objet(PoserAuSol({0.90f, 2.00f, PANNEAU}, -0.70f, -posPanneau), {0.90f, 2.00f, PANNEAU}, -0.70f, 0.f, -posPanneau, 0.45f, 0.28f, 0.15f);
+
+        // Fenetres
+        objet(NkMat4f::Translate({-posPanneau, 1.40f, -0.90f}) * NkMat4f::Scale({PANNEAU, 1.00f, 1.20f}), {PANNEAU, 1.00f, 1.20f}, -posPanneau, 0.90f, -0.90f, 0.55f, 0.75f, 0.95f);
+        objet(NkMat4f::Translate({-posPanneau, 1.40f, 0.90f}) * NkMat4f::Scale({PANNEAU, 1.00f, 1.20f}), {PANNEAU, 1.00f, 1.20f}, -posPanneau, 0.90f, 0.90f, 0.55f, 0.75f, 0.95f);
+
+        // Plateau
+        objet(NkMat4f::Translate({TABLE_X, PLATEAU_Y, TABLE_Z}) * NkMat4f::Scale({LONGUEUR, EP_PLATEAU, PROFONDEUR}), {LONGUEUR, EP_PLATEAU, PROFONDEUR}, TABLE_X, DESSUS - EP_PLATEAU, TABLE_Z, 0.62f, 0.42f, 0.22f);
+
+        // Quatre pieds
+        const float signes[2] = {-1.f, 1.f};
+        for (int i = 0; i < 2; ++i) {
+            for (int j = 0; j < 2; ++j) {
+                objet(PoserAuSol({PIED, PIED_H, PIED}, TABLE_X + signes[i] * PIED_DX, TABLE_Z + signes[j] * PIED_DZ), {PIED, PIED_H, PIED}, TABLE_X + signes[i] * PIED_DX, 0.f, TABLE_Z + signes[j] * PIED_DZ, 0.40f, 0.26f, 0.14f);
+            }
+        }
+
+        // Objet pose sur la table
+        objet(PoserSurTable({0.20f, 0.30f, 0.20f}, TABLE_X, TABLE_Z), {0.20f, 0.30f, 0.20f}, TABLE_X, DESSUS, TABLE_Z, 0.20f, 0.45f, 0.70f);
+
+        renderer->Present();
+        renderer->EndFrame();
+    }
+
+    device->WaitIdle();
+    NkRenderer::Destroy(renderer);
+    NkDeviceFactory::Destroy(device);
+    window.Close();
+    return 0;
+}
+
+== FICHIERS DE BUILD ==
+
+--- C:\Users\PAOLO\ani-5089\Jenga\Jenga\Exemples\23_android_sdl3_ndk_mk\make_universal_apk.ps1 ---
+param(
+    [string]$Config = "Debug",
+    [string]$Project = "SDL3NativeDemo"
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+function Resolve-BuildTool {
+    param(
+        [string]$SdkPath,
+        [string]$ToolName
+    )
+
+    $buildTools = Join-Path $SdkPath "build-tools"
+    if (!(Test-Path $buildTools)) {
+        throw "Android build-tools directory not found: $buildTools"
+    }
+
+    $latest = Get-ChildItem -Path $buildTools -Directory | Sort-Object Name -Descending | Select-Object -First 1
+    if (-not $latest) {
+        throw "No Android build-tools version found in: $buildTools"
+    }
+
+    $candidates = @(
+        (Join-Path $latest.FullName "$ToolName.exe"),
+        (Join-Path $latest.FullName "$ToolName.bat"),
+        (Join-Path $latest.FullName $ToolName)
+    )
+    foreach ($c in $candidates) {
+        if (Test-Path $c) {
+            return $c
+        }
+    }
+    throw "$ToolName not found in $($latest.FullName)"
+}
+
+function Expand-ApkToDirectory {
+    param(
+        [string]$ApkPath,
+        [string]$Destination
+    )
+
+    $zipCopy = Join-Path (Split-Path $Destination -Parent) ((Split-Path $ApkPath -Leaf) + ".zip")
+    Copy-Item -Force $ApkPath $zipCopy
+    Expand-Archive -Path $zipCopy -DestinationPath $Destination -Force
+}
+
+$sdkRoot = $env:ANDROID_SDK_ROOT
+if ([string]::IsNullOrWhiteSpace($sdkRoot)) {
+    $sdkRoot = $env:ANDROID_HOME
+}
+if ([string]::IsNullOrWhiteSpace($sdkRoot)) {
+    $sdkRoot = "C:/Android/sdk"
+}
+if (!(Test-Path $sdkRoot)) {
+    throw "Android SDK not found. Set ANDROID_SDK_ROOT or ANDROID_HOME."
+}
+
+$zipalign = Resolve-BuildTool -SdkPath $sdkRoot -ToolName "zipalign"
+$apksigner = Resolve-BuildTool -SdkPath $sdkRoot -ToolName "apksigner"
+
+$exampleRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$apkRoot = Join-Path $exampleRoot ("Build/Bin/{0}-Android/{1}" -f $Config, $Project)
+
+$abiMap = @{
+    "armeabi-v7a" = Join-Path $apkRoot "$("android-build-armeabi-v7a")/$Project-$Config.apk"
+    "arm64-v8a"   = Join-Path $apkRoot "$("android-build-arm64-v8a")/$Project-$Config.apk"
+    "x86"         = Join-Path $apkRoot "$("android-build-x86")/$Project-$Config.apk"
+    "x86_64"      = Join-Path $apkRoot "$("android-build-x86_64")/$Project-$Config.apk"
+}
+
+foreach ($abi in $abiMap.Keys) {
+    if (!(Test-Path $abiMap[$abi])) {
+        throw "Missing ABI APK for '$abi': $($abiMap[$abi])"
+    }
+}
+
+$outDir = Join-Path $apkRoot "android-build-universal-ndk-mk"
+$workDir = Join-Path $outDir "_work"
+
+--- C:\Users\PAOLO\ani-5089\Jenga\Jenga\jenga.bat ---
+@echo off
+REM Jenga launcher script for Windows
+
+set SCRIPT_DIR=%~dp0
+python "%SCRIPT_DIR%\jenga.py" %*
+
+--- C:\Users\PAOLO\ani-5089\Jenga\nken\clean_examples.bat ---
+@echo off
+REM clean_examples.bat
+REM Supprime les dossiers .jenga\ et Build\ dans tous les sous-dossiers de Jenga\Exemples
+
+cd /d "%~dp0Jenga\Exemples" || ( echo Dossier Jenga\Exemples introuvable & exit /b 1 )
+
+for /d %%d in (*) do (
+    echo Nettoyage de %%d
+    if exist "%%d\.jenga" rmdir /s /q "%%d\.jenga"
+    if exist "%%d\Build"  rmdir /s /q "%%d\Build"
+)
+
+echo Nettoyage terminÃ©.
+pause
+
+--- C:\Users\PAOLO\ani-5089\Jenga\nken\cri.bat ---
+@echo off
+setlocal EnableExtensions EnableDelayedExpansion
+cd /d "%~dp0"
+
+REM ============================================================================
+REM cri.bat â€” Jenga Dev + Distribution Build Script
+REM
+REM Mode dev (par dÃ©faut) :
+REM   cri.bat           â†’ nettoie, rÃ©installe en mode Ã©ditable, build dist/
+REM
+REM Avec tests :
+REM   cri.bat --tests   â†’ identique + lance la suite pytest
+REM ============================================================================
+
+set "RUN_TESTS=0"
+if /i "%1"=="--tests" set "RUN_TESTS=1"
+if /i "%1"=="-t"      set "RUN_TESTS=1"
+
+REM --- DÃ©tection Python ---
+set "PY=python"
+python -V >nul 2>&1 || (
+    set "PY=py"
+    py -V >nul 2>&1 || (
+        echo [ERREUR] Python introuvable dans le PATH.
+        exit /b 1
+    )
+)
+
+echo.
+echo ============================================================
+echo   Jenga Build Script â€” Dev + Distribution
+echo ============================================================
+echo.
+
+REM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+echo [1/6] Nettoyage des fichiers .pyc et __pycache__ ...
+del /s /q *.pyc 2>nul
+for /d /r . %%d in (__pycache__) do @if exist "%%d" rmdir /s /q "%%d"
+
+REM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+echo [2/6] Suppression des artefacts de build precedents ...
+if exist build           rmdir /s /q build
+if exist dist            rmdir /s /q dist
+for /d %%D in (*.egg-info) do rmdir /s /q "%%D"
+
+REM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+echo [3/6] Desinstallation de tous les anciens paquets Jenga ...
+%PY% -m pip uninstall Jenga -y 2>nul
+%PY% -m pip uninstall jenga -y 2>nul
+%PY% -m pip uninstall jenga-build-system -y 2>nul
+
+REM Mise Ã  jour de setuptools et wheel (nÃ©cessaire pour le mode editable avec pyproject.toml)
+echo [3/6] Mise Ã  jour de setuptools et wheel...
+%PY% -m pip install --upgrade setuptools wheel --quiet
+
+echo [3/6] Reinstallation en mode developpement (editable) ...
+%PY% -m pip install -e . --quiet
+if errorlevel 1 (
+    echo [AVERTISSEMENT] L'installation en mode editable a echoue. Vous pourrez installer le wheel apres le build.
+) else (
+    echo [OK] Installation dev terminee.
+)
+
+REM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+if "%RUN_TESTS%"=="1" (
+    echo.
+    echo [4/6] Lancement de la suite de tests pytest ...
+    %PY% -m pytest tests/ -v --tb=short
+    if errorlevel 1 (
+        echo.
+        echo [AVERTISSEMENT] Des tests ont echoue â€” le build de distribution continue.
+    ) else (
+        echo [OK] Tous les tests sont verts.
+    )
+) else (
+    echo [4/6] Tests ignores  ^(utilisez --tests pour les lancer^)
+)
+
+REM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+echo.
+
+--- C:\Users\PAOLO\ani-5089\Jenga\scripts\jenga27_android_only.ps1 ---
+$ErrorActionPreference = "Stop"
+
+$repo = "E:\Projets\MacShared\Projets\Jenga"
+$example27 = Join-Path $repo "Jenga\Exemples\27_nk_window"
+$example25 = Join-Path $repo "Jenga\Exemples\25_opengl_triangle"
+
+if (-not (Test-Path $example27)) { throw "Missing: $example27" }
+if (-not (Test-Path $example25)) { throw "Missing: $example25" }
+
+if (-not $env:ANDROID_SDK_ROOT -and (Test-Path "C:\Android\sdk")) {
+    $env:ANDROID_SDK_ROOT = "C:\Android\sdk"
+}
+if (-not $env:ANDROID_HOME -and $env:ANDROID_SDK_ROOT) {
+    $env:ANDROID_HOME = $env:ANDROID_SDK_ROOT
+}
+if (-not $env:ANDROID_NDK_ROOT) {
+    if (Test-Path "C:\Android\sdk\ndk\27.0.12077973") {
+        $env:ANDROID_NDK_ROOT = "C:\Android\sdk\ndk\27.0.12077973"
+    } elseif (Test-Path "C:\Android\android-ndk-r27d") {
+        $env:ANDROID_NDK_ROOT = "C:\Android\android-ndk-r27d"
+    }
+}
+
+$pythonExe = $null
+if (Get-Command py -ErrorAction SilentlyContinue) {
+    $pythonExe = "py"
+    $pythonPrefix = @("-3")
+} elseif (Get-Command python -ErrorAction SilentlyContinue) {
+    $pythonExe = "python"
+    $pythonPrefix = @()
+} elseif (Get-Command python3 -ErrorAction SilentlyContinue) {
+    $pythonExe = "python3"
+    $pythonPrefix = @()
+} else {
+    $cand = Get-ChildItem "C:\Users\*\AppData\Local\Programs\Python" -Recurse -Filter python.exe -ErrorAction SilentlyContinue |
+        Sort-Object FullName -Descending | Select-Object -First 1
+    if (-not $cand) { throw "Python not found" }
+    $pythonExe = $cand.FullName
+    $pythonPrefix = @()
+}
+
+Write-Host "Python: $pythonExe"
+Write-Host "ANDROID_SDK_ROOT=$env:ANDROID_SDK_ROOT"
+Write-Host "ANDROID_NDK_ROOT=$env:ANDROID_NDK_ROOT"
+
+function Run-Build([string]$path, [string]$jengaFile, [string]$label) {
+    Write-Host ""
+    Write-Host "===== BUILD $label ====="
+    Set-Location $path
+    # Nettoyage ciblÃ© Android pour Ã©viter les mÃ©langes d'artefacts entre ABIs.
+    foreach ($sub in @("Build\\Obj", "Build\\Lib", "Build\\Bin", "Build\\Tests")) {
+        $base = Join-Path $path $sub
+        if (Test-Path $base) {
+            Get-ChildItem -Path $base -Directory -Filter "Debug-Android*" -ErrorAction SilentlyContinue |
+                Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+    $buildRoot = Join-Path $path "Build"
+    if (Test-Path $buildRoot) {
+        Get-ChildItem -Path $buildRoot -Directory -Recurse -Filter "android-build-*" -ErrorAction SilentlyContinue |
+            Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    }
+
+    $logDir = Join-Path $path "Build\command_tests"
+    if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir -Force | Out-Null }
+    $stamp = Get-Date -Format "yyyyMMdd_HHmmss"
+    $safeLabel = ($label -replace "[^A-Za-z0-9_-]", "_")
+    $logFile = Join-Path $logDir "android_build_${safeLabel}_${stamp}.log"
+
+    # Important: en PowerShell 7, stderr des commandes natives peut devenir une erreur
+    # terminante si ErrorActionPreference=Stop. On le dÃ©sactive localement pour garder
+    # le flux de build intact et rÃ©cupÃ©rer le code de retour rÃ©el.
+    $oldNativePref = $null
+    if (Get-Variable -Name PSNativeCommandUseErrorActionPreference -Scope Global -ErrorAction SilentlyContinue) {
+        $oldNativePref = $global:PSNativeCommandUseErrorActionPreference
+        $global:PSNativeCommandUseErrorActionPreference = $false
+    }
+    $oldEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+
+--- C:\Users\PAOLO\ani-5089\Jenga\scripts\jenga27_build_order.ps1 ---
+$ErrorActionPreference = "Stop"
+
+$repo = "E:\Projets\MacShared\Projets\Jenga"
+$example = Join-Path $repo "Jenga\Exemples\27_nk_window"
+
+if (-not (Test-Path $example)) {
+    throw "Workspace not found: $example"
+}
+
+# --- Auto env setup for Windows host tooling ---
+if (-not $env:ANDROID_SDK_ROOT) {
+    if (Test-Path "C:\Android\sdk") { $env:ANDROID_SDK_ROOT = "C:\Android\sdk" }
+}
+if (-not $env:ANDROID_HOME -and $env:ANDROID_SDK_ROOT) {
+    $env:ANDROID_HOME = $env:ANDROID_SDK_ROOT
+}
+if (-not $env:ANDROID_NDK_ROOT) {
+    if (Test-Path "C:\Android\sdk\ndk\27.0.12077973") {
+        $env:ANDROID_NDK_ROOT = "C:\Android\sdk\ndk\27.0.12077973"
+    } elseif (Test-Path "C:\Android\android-ndk-r27d") {
+        $env:ANDROID_NDK_ROOT = "C:\Android\android-ndk-r27d"
+    }
+}
+if (-not $env:MINGW_ROOT -and (Test-Path "C:\msys64\ucrt64")) {
+    $env:MINGW_ROOT = "C:\msys64\ucrt64"
+}
+if (-not $env:EMSDK) {
+    if (Test-Path "C:\emsdk") {
+        $env:EMSDK = "C:\emsdk"
+    } elseif (Test-Path "E:\emsdk") {
+        $env:EMSDK = "E:\emsdk"
+    }
+}
+
+$pythonCmd = $null
+if (Get-Command py -ErrorAction SilentlyContinue) {
+    $pythonCmd = "py -3"
+} elseif (Get-Command python -ErrorAction SilentlyContinue) {
+    $pythonCmd = "python"
+} elseif (Get-Command python3 -ErrorAction SilentlyContinue) {
+    $pythonCmd = "python3"
+} else {
+    $pyCandidates = Get-ChildItem "C:\\Users\\*\\AppData\\Local\\Programs\\Python" -Recurse -Filter python.exe -ErrorAction SilentlyContinue |
+        Sort-Object FullName -Descending
+    if ($pyCandidates -and $pyCandidates.Count -gt 0) {
+        $pythonCmd = ('"' + $pyCandidates[0].FullName + '"')
+    } else {
+        throw "Python not found on Windows PATH"
+    }
+}
+
+Set-Location $example
+
+Write-Host "Repo: $repo"
+Write-Host "Example: $example"
+Write-Host "Python: $pythonCmd"
+Write-Host "ANDROID_SDK_ROOT=$env:ANDROID_SDK_ROOT"
+Write-Host "ANDROID_NDK_ROOT=$env:ANDROID_NDK_ROOT"
+Write-Host "MINGW_ROOT=$env:MINGW_ROOT"
+Write-Host "EMSDK=$env:EMSDK"
+
+$results = @{}
+
+function Invoke-Build([string]$platform) {
+    Write-Host ""
+    Write-Host "=================================================="
+    Write-Host "BUILD PLATFORM: $platform"
+    Write-Host "=================================================="
+
+    $cmd = "$pythonCmd ..\\..\\jenga.py build --no-daemon --jenga-file 27_nk_window.jenga --platform $platform"
+    Write-Host "> $cmd"
+
+    cmd.exe /c $cmd
+    $exitCode = $LASTEXITCODE
+
+    if ($exitCode -eq 0) {
+        $results[$platform] = "OK"
+    } else {
+        $results[$platform] = "FAIL (exit=$exitCode)"
+    }
+
+--- C:\Users\PAOLO\ani-5089\Jenga\scripts\jenga27_windows_web_only.ps1 ---
+param(
+    [switch]$Clean
+)
+
+$ErrorActionPreference = "Stop"
+
+$repo = "E:\Projets\MacShared\Projets\Jenga"
+$example = Join-Path $repo "Jenga\Exemples\27_nk_window"
+
+if (-not (Test-Path $example)) {
+    throw "Workspace not found: $example"
+}
+
+# --- Auto env setup for Windows host tooling ---
+if (-not $env:MINGW_ROOT -and (Test-Path "C:\msys64\ucrt64")) {
+    $env:MINGW_ROOT = "C:\msys64\ucrt64"
+}
+if (-not $env:EMSDK) {
+    if (Test-Path "C:\emsdk") {
+        $env:EMSDK = "C:\emsdk"
+    } elseif (Test-Path "E:\emsdk") {
+        $env:EMSDK = "E:\emsdk"
+    }
+}
+
+$pythonCmd = $null
+if (Get-Command py -ErrorAction SilentlyContinue) {
+    $pythonCmd = "py -3"
+} elseif (Get-Command python -ErrorAction SilentlyContinue) {
+    $pythonCmd = "python"
+} elseif (Get-Command python3 -ErrorAction SilentlyContinue) {
+    $pythonCmd = "python3"
+} else {
+    $pyCandidates = Get-ChildItem "C:\\Users\\*\\AppData\\Local\\Programs\\Python" -Recurse -Filter python.exe -ErrorAction SilentlyContinue |
+        Sort-Object FullName -Descending
+    if ($pyCandidates -and $pyCandidates.Count -gt 0) {
+        $pythonCmd = ('"' + $pyCandidates[0].FullName + '"')
+    } else {
+        throw "Python not found on Windows PATH"
+    }
+}
+
+Set-Location $example
+
+Write-Host "Repo: $repo"
+Write-Host "Example: $example"
+Write-Host "Python: $pythonCmd"
+Write-Host "MINGW_ROOT=$env:MINGW_ROOT"
+Write-Host "EMSDK=$env:EMSDK"
+Write-Host "Clean mode: $Clean"
+
+if (-not (Get-Command emcc -ErrorAction SilentlyContinue)) {
+    Write-Warning "emcc not found in PATH. If Web build fails, run emsdk_env.bat first."
+}
+
+$results = @{}
+
+function Invoke-Step([string]$platform) {
+    Write-Host ""
+    Write-Host "=================================================="
+    Write-Host "PLATFORM: $platform"
+    Write-Host "=================================================="
+
+    if ($Clean) {
+        $cleanCmd = "$pythonCmd ..\\..\\jenga.py clean --jenga-file 27_nk_window.jenga --platform $platform"
+        Write-Host "> $cleanCmd"
+        cmd.exe /c $cleanCmd
+        if ($LASTEXITCODE -ne 0) {
+            $results[$platform] = "FAIL CLEAN (exit=$LASTEXITCODE)"
+            return
+        }
+    }
+
+    $buildCmd = "$pythonCmd ..\\..\\jenga.py build --no-daemon --jenga-file 27_nk_window.jenga --platform $platform"
+    Write-Host "> $buildCmd"
+    cmd.exe /c $buildCmd
+    $exitCode = $LASTEXITCODE
+
+    if ($exitCode -eq 0) {
+        $results[$platform] = "OK"
+
+--- C:\Users\PAOLO\ani-5089\Jenga\scripts\run_all_examples_windows.ps1 ---
+param(
+  [string]$PythonCmd = "py",
+  [switch]$NoCache,
+  [string]$Config = "Debug",
+  [switch]$ForceAllPlatforms,
+  [switch]$SkipSmoke,
+  [switch]$SmokeOnly
+)
+
+$ErrorActionPreference = "Continue"
+$root = Split-Path -Parent $PSScriptRoot
+Set-Location $root
+
+# Force UTF-8 to avoid cp1252 banner crash with box-drawing characters.
+$env:PYTHONIOENCODING = "utf-8"
+$env:PYTHONUTF8 = "1"
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
+
+$resultsDir = Join-Path $root ".jenga\windows-test-results"
+New-Item -ItemType Directory -Force -Path $resultsDir | Out-Null
+
+$examples = Get-ChildItem -Directory (Join-Path $root "Exemples") | Where-Object { $_.Name -match '^[0-9][0-9]_' } | Sort-Object Name
+
+# Detect installed toolchains/platform capability.
+$hasEmcc = [bool](Get-Command emcc -ErrorAction SilentlyContinue)
+$hasAndroidSdk = [bool]$env:ANDROID_SDK_ROOT -or [bool]$env:ANDROID_HOME
+$hasAndroidNdk = [bool]$env:ANDROID_NDK_ROOT -or [bool]$env:ANDROID_NDK_HOME
+$hasHarmony = [bool]$env:HARMONY_OS_SDK
+$hasGdk = [bool]$env:GameDK -or (Test-Path "C:\Program Files\Microsoft GDK")
+$hasZig = [bool](Get-Command zig -ErrorAction SilentlyContinue)
+
+# Base matrix.
+$platforms = @($null, "Windows-x86_64")
+
+# Cross Linux from Windows if zig or clang/gcc cross is likely available.
+if ($ForceAllPlatforms -or $hasZig -or (Get-Command clang -ErrorAction SilentlyContinue) -or (Get-Command gcc -ErrorAction SilentlyContinue)) {
+  $platforms += "Linux-x86_64"
+}
+if ($ForceAllPlatforms -or ($hasAndroidSdk -and $hasAndroidNdk)) {
+  $platforms += "Android-arm64"
+}
+if ($ForceAllPlatforms -or $hasEmcc) {
+  $platforms += "Web-wasm32"
+}
+if ($ForceAllPlatforms -or $hasHarmony) {
+  $platforms += "HarmonyOS-arm64"
+}
+if ($ForceAllPlatforms -or $hasGdk) {
+  $platforms += "XboxOne-x86_64"
+  $platforms += "XboxSeries-x86_64"
+}
+
+# macOS/iOS builders are intentionally host-restricted to macOS.
+if ($ForceAllPlatforms) {
+  $platforms += "macOS-arm64"
+  $platforms += "iOS-arm64"
+}
+
+Write-Host "Detected toolchains:"
+Write-Host ("  emcc={0} androidSdk={1} androidNdk={2} zig={3} harmony={4} gdk={5}" -f $hasEmcc, $hasAndroidSdk, $hasAndroidNdk, $hasZig, $hasHarmony, $hasGdk)
+Write-Host ("Platform matrix: {0}" -f (($platforms | ForEach-Object { if ($_){$_} else {"default"} }) -join ", "))
+
+# Refresh global toolchains from current machine first.
+& $PythonCmd -X utf8 -m Jenga.Jenga install toolchain detect | Out-Host
+
+$summary = @()
+
+function Invoke-ExampleBuild {
+  param(
+    [Parameter(Mandatory = $true)] [System.IO.DirectoryInfo]$ExampleDir,
+    [Parameter(Mandatory = $false)] [string]$Platform
+  )
+
+  $jengaFile = Get-ChildItem -Path $ExampleDir.FullName -Filter *.jenga | Select-Object -First 1
+  if (-not $jengaFile) { return $null }
+
+  $name = $ExampleDir.Name
+  $platTag = if ($Platform) { $Platform } else { "default" }
+  $safeTag = ($platTag -replace '[^A-Za-z0-9_\-]', '_')
+  $logPath = Join-Path $resultsDir ("{0}_{1}.log" -f $name, $safeTag)
+
+== API DU MOTEUR (headers) ==
+
+> Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:26:    virtual bool Init(const 
+NkRendererConfig& config,
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:27:                      const 
+NkSurfaceDesc& surface)   = 0;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:28:    virtual void Shutdown()              
+               = 0;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:29:    virtual bool IsValid()  const        
+               = 0;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:30:
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:31:    // Informations
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:32:    virtual NkRendererApi GetApi()     
+const            = 0;
+> Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:58:    NkRendererConfig  mConfig;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:59:    NkSurfaceDesc     mSurface;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:60:    NkFramebufferInfo mFbInfo;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:61:    NkError           mLastError;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:62:    bool              mReady    = false;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:63:    NkU32             mBgColor  = 
+0x141414FF;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\IRendererImpl.h:64:};
+> Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:11://   nkentseu::NkNkRendererConfig rcfg;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:12://   rcfg.api = 
+nkentseu::NkNkRendererApi::NK_SOFTWARE;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:13://   nkentseu::NkRenderer 
+NkRenderer(window, rcfg);
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:14://   
+NkRenderer.SetBackgroundColor(0x141414FF);
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:15://
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:16://   while (window.IsOpen()) {
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:17://       
+nkentseu::EventSystem::Instance().PollEvents();
+> Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:57:    NkRenderer(Window& window, const 
+NkRendererConfig& config = {});
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:58:    ~NkRenderer();
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:59:
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:60:    NkRenderer(const NkRenderer&)           
+ = delete;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:61:    NkRenderer& operator=(const 
+NkRenderer&) = delete;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:62:
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:63:    // --- Cycle de vie ---
+> Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:65:    bool Create(Window& window, const 
+NkRendererConfig& config = {});
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:66:    void Shutdown();
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:67:    bool IsValid() const;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:68:
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:69:    // --- Informations ---
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:70:
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkRenderer.h:71:    NkRendererApi GetApi()                
+const;
+> Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkSurface.h:95:// NkRendererConfig - configuration de 
+création du renderer
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkSurface.h:96:// 
+---------------------------------------------------------------------------
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkSurface.h:97:
+> Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkSurface.h:98:struct NkRendererConfig
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkSurface.h:99:{
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkSurface.h:100:    NkRendererApi api         = 
+NkRendererApi::NK_SOFTWARE;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkSurface.h:101:    NkPixelFormat colorFormat = 
+NkPixelFormat::NK_PIXEL_R8G8B8A8_UNORM;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkSurface.h:102:    NkPixelFormat depthFormat = 
+NkPixelFormat::NK_PIXEL_D24_UNORM_S8_UINT;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkSurface.h:103:    NkU32         sampleCount = 1;     ///< 
+MSAA (1 = désactivé)
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Core\NkSurface.h:104:    bool          vsync       = true;
+> Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\Software\NkSoftwareRendererImpl.h:25:    bool 
+Init(const NkRendererConfig& config,
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\Software\NkSoftwareRendererImpl.h:26:              
+const NkSurfaceDesc& surface)  override;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\Software\NkSoftwareRendererImpl.h:27:    void 
+Shutdown()                           override;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\Software\NkSoftwareRendererImpl.h:28:
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\Software\NkSoftwareRendererImpl.h:29:    bool          
+IsValid()               const override;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\Software\NkSoftwareRendererImpl.h:30:    NkRendererApi 
+GetApi()                const override;
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\Software\NkSoftwareRendererImpl.h:31:    std::string   
+GetApiName()            const override;
+> Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\NkRendererStubs.h:24:    bool Init(const 
+NkRendererConfig& c, const NkSurfaceDesc& s) override   \
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\NkRendererStubs.h:25:    { mConfig=c; mSurface=s; 
+mReady=true; return true; }                    \
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\NkRendererStubs.h:26:    void Shutdown()  override { 
+mReady=false; }                              \
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\NkRendererStubs.h:27:    bool IsValid()   const 
+override { return mReady; }                      \
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\NkRendererStubs.h:28:    NkRendererApi GetApi()    
+const override { return NkRendererApi::ApiEnum; } \
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\NkRendererStubs.h:29:    std::string   
+GetApiName()const override { return ApiStr; }             \
+  Jenga\Jenga\Exemples\27_nk_window\NKWindow\src\NKWindow\Renderer\NkRendererStubs.h:30:    bool IsHardwareAccelerated() 
+const override { return HwAccel; }         \
+> Nkentseu\Applications\Pong\src\Pong\PongConfig.h:138:						case NkGraphicsApi::NK_GFX_API_SOFTWARE:
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:139:							return "software";
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:140:						case NkGraphicsApi::NK_GFX_API_METAL:
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:141:							return "metal";
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:142:						case NkGraphicsApi::NK_GFX_API_AUTO:
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:143:						default:
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:144:							return "auto";
+> Nkentseu\Applications\Pong\src\Pong\PongConfig.h:160:						return NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:161:					if (std::strcmp(value, "metal") == 0)
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:162:						return NkGraphicsApi::NK_GFX_API_METAL;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:163:					if (std::strcmp(value, "auto") == 0)
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:164:						return NkGraphicsApi::NK_GFX_API_AUTO;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:165:					return NkGraphicsApi::NK_GFX_API_OPENGL;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:166:				}
+> Nkentseu\Applications\Pong\src\Pong\PongConfig.h:216:					c.apis[4] = NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:217:					c.count = 5;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:218:#elif defined(NKENTSEU_PLATFORM_UWP) || 
+defined(NKENTSEU_PLATFORM_XBOX)
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:219:					c.apis[0] = NkGraphicsApi::NK_GFX_API_DX12;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:220:					c.apis[1] = NkGraphicsApi::NK_GFX_API_DX11;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:221:					c.count = 2;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:222:#elif defined(NKENTSEU_PLATFORM_LINUX)
+> Nkentseu\Applications\Pong\src\Pong\PongConfig.h:225:					c.apis[2] = NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:226:					c.count = 3;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:227:#elif defined(NKENTSEU_PLATFORM_MACOS)
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:228:					c.apis[0] = NkGraphicsApi::NK_GFX_API_METAL;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:229:					c.apis[1] = NkGraphicsApi::NK_GFX_API_OPENGL;
+> Nkentseu\Applications\Pong\src\Pong\PongConfig.h:230:					c.apis[2] = NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:231:					c.count = 3;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:232:#elif defined(NKENTSEU_PLATFORM_ANDROID) || 
+defined(NKENTSEU_PLATFORM_HARMONYOS)
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:233:					c.apis[0] = NkGraphicsApi::NK_GFX_API_VULKAN;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:234:					c.apis[1] = NkGraphicsApi::NK_GFX_API_OPENGL;
+> Nkentseu\Applications\Pong\src\Pong\PongConfig.h:235:					c.apis[2] = NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:236:					c.count = 3;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:237:#elif defined(NKENTSEU_PLATFORM_IOS)
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:238:					c.apis[0] = NkGraphicsApi::NK_GFX_API_METAL;
+> Nkentseu\Applications\Pong\src\Pong\PongConfig.h:239:					c.apis[1] = NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:240:					c.count = 2;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:241:#else
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:242:					c.apis[0] = NkGraphicsApi::NK_GFX_API_OPENGL;
+> Nkentseu\Applications\Pong\src\Pong\PongConfig.h:243:					c.apis[1] = NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:244:					c.count = 2;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:245:#endif
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:246:					return c;
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:247:				}
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:248:		};
+  Nkentseu\Applications\Pong\src\Pong\PongConfig.h:249:
+> Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:105:						case NkGraphicsApi::NK_GFX_API_SOFTWARE:
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:106:							return "software";
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:107:						case NkGraphicsApi::NK_GFX_API_METAL:
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:108:							return "metal";
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:109:						case NkGraphicsApi::NK_GFX_API_AUTO:
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:110:						default:
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:111:							return "auto";
+> Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:127:						return NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:128:					if (std::strcmp(value, "metal") == 0)
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:129:						return NkGraphicsApi::NK_GFX_API_METAL;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:130:					if (std::strcmp(value, "auto") == 0)
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:131:						return NkGraphicsApi::NK_GFX_API_AUTO;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:132:					return NkGraphicsApi::NK_GFX_API_OPENGL;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:133:				}
+> Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:183:					c.apis[4] = NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:184:					c.count = 5;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:185:#elif defined(NKENTSEU_PLATFORM_UWP) || 
+defined(NKENTSEU_PLATFORM_XBOX)
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:186:					c.apis[0] = NkGraphicsApi::NK_GFX_API_DX12;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:187:					c.apis[1] = NkGraphicsApi::NK_GFX_API_DX11;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:188:					c.count = 2;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:189:#elif defined(NKENTSEU_PLATFORM_LINUX)
+> Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:192:					c.apis[2] = NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:193:					c.count = 3;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:194:#elif defined(NKENTSEU_PLATFORM_MACOS)
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:195:					c.apis[0] = NkGraphicsApi::NK_GFX_API_METAL;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:196:					c.apis[1] = NkGraphicsApi::NK_GFX_API_OPENGL;
+> Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:197:					c.apis[2] = NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:198:					c.count = 3;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:199:#elif defined(NKENTSEU_PLATFORM_ANDROID) || 
+defined(NKENTSEU_PLATFORM_HARMONYOS)
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:200:					c.apis[0] = NkGraphicsApi::NK_GFX_API_VULKAN;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:201:					c.apis[1] = NkGraphicsApi::NK_GFX_API_OPENGL;
+> Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:202:					c.apis[2] = NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:203:					c.count = 3;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:204:#elif defined(NKENTSEU_PLATFORM_IOS)
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:205:					c.apis[0] = NkGraphicsApi::NK_GFX_API_METAL;
+> Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:206:					c.apis[1] = NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:207:					c.count = 2;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:208:#else
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:209:					c.apis[0] = NkGraphicsApi::NK_GFX_API_OPENGL;
+> Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:210:					c.apis[1] = NkGraphicsApi::NK_GFX_API_SOFTWARE;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:211:					c.count = 2;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:212:#endif
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:213:					return c;
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:214:				}
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:215:		};
+  Nkentseu\Applications\Pong2\src\Pong\PongConfig.h:216:
+
+

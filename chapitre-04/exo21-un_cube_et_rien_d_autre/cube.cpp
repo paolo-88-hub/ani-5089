@@ -16,12 +16,14 @@
 using namespace nkentseu;
 using namespace nkentseu::renderer;
 
-static void ConfigureAppData(NkAppData &d) {
+static void ConfigureAppData(NkAppData &d)
+{
     d.appName = "ExoCube";
 }
 NK_REGISTER_ENTRY_APPDATA_UPDATER(ConfigureAppData)
 
-int nkmain(const NkEntryState &state) {
+int nkmain(const NkEntryState &state)
+{
     (void)state;
 
     NkWindowConfig winCfg;
@@ -31,7 +33,8 @@ int nkmain(const NkEntryState &state) {
     winCfg.centered = true;
 
     NkWindow window(winCfg);
-    if (!window.IsValid()) {
+    if (!window.IsValid())
+    {
         logger.Error("[Cube] Creation fenetre KO");
         return 1;
     }
@@ -42,7 +45,8 @@ int nkmain(const NkEntryState &state) {
     devInfo.height = (uint32)window.GetSize().height;
 
     NkIDevice *device = NkDeviceFactory::CreateAutoDetect(devInfo);
-    if (!device || !device->IsValid()) {
+    if (!device || !device->IsValid())
+    {
         logger.Error("[Cube] Creation device KO");
         window.Close();
         return 2;
@@ -52,7 +56,8 @@ int nkmain(const NkEntryState &state) {
     NkRendererConfig cfg = NkRendererConfig::ForGame(devInfo.api, devInfo.width, devInfo.height);
     cfg.subsystems = NK_SS_RENDER3D;
     NkRenderer *renderer = NkRenderer::Create(device, cfg);
-    if (!renderer || !renderer->Initialize()) {
+    if (!renderer || !renderer->Initialize())
+    {
         logger.Error("[Cube] Init renderer KO");
         NkRenderer::Destroy(renderer);
         NkDeviceFactory::Destroy(device);
@@ -67,13 +72,15 @@ int nkmain(const NkEntryState &state) {
     uint32 W = devInfo.width;
     uint32 H = devInfo.height;
     NkEventSystem &events = NkEvents();
-    events.AddEventCallback<NkWindowCloseEvent>([&](NkWindowCloseEvent *) { running = false; });
-    events.AddEventCallback<NkKeyPressEvent>([&](NkKeyPressEvent *e) {
+    events.AddEventCallback<NkWindowCloseEvent>([&](NkWindowCloseEvent *)
+                                                { running = false; });
+    events.AddEventCallback<NkKeyPressEvent>([&](NkKeyPressEvent *e)
+                                             {
         if (e->GetKey() == NkKey::NK_ESCAPE)
-            running = false;
-    });
+            running = false; });
 
-    while (running && window.IsOpen()) {
+    while (running && window.IsOpen())
+    {
         events.PollEvents();
         if (!renderer->BeginFrame())
             continue;
@@ -96,7 +103,7 @@ int nkmain(const NkEntryState &state) {
         sun.direction = {-0.4f, -1.f, -0.3f};
         sun.color = {1.f, 0.95f, 0.85f};
         sun.intensity = 3.f;
-		sun.castShadow = false;
+        sun.castShadow = false;
         sctx.lights.PushBack(sun);
 
         r3d->BeginScene(sctx);
