@@ -1,0 +1,9 @@
+Position 1 : Près de la fenêtre, le bruit ressemble à une pluie avec une tonalité forte. Le son est perçu comme venant de la gauche.
+
+Position 2 : Au centre de la salle, la tonalité paraît plus faible à gauche que lors de la première écoute, même si la première semblait déjà plus forte à gauche.
+
+Position 3 : Dans le coin opposé, le son paraît plus lointain et plus faible.
+
+Sans positional : Le bruit de pluie paraît plus fort et semble venir de la tête, quel que soit l’endroit où je me trouve.
+
+Ce que les mesures montrent : En mode positional, les niveaux mesurés sont gauche 1 : G 0.040186, D 0.000000 ; devant 1 : G 0.000000, D 0.040186 ; droite 1 : G 0.040236, D 0.000000. La droite ne ressort donc pas du côté D et le son devant n’est pas réparti également : cela CONTREDIT l’attente. Une convention d’orientation ou de panoramique des canaux peut expliquer cet écart, mais les mesures seules ne permettent pas de le trancher. Dans l’autre mode, les deux canaux sont presque égaux pour les trois positions. La moyenne arithmétique des six niveaux canal est de 0.020101 avec positional, contre 0.157352 en mode omnidirectionnel, soit un niveau moyen environ 7.83 fois plus élevé.
