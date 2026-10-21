@@ -1,0 +1,8 @@
+A trois metres :
+Le panneau est petit. Le mot reste visible dans la version ordinaire, tandis que la version SDF ne montre presque pas les lettres; a cette distance, elle ressemble surtout a un panneau vert.
+
+A cinquante centimetres :
+Le panneau occupe une grande partie de l'image. Dans la version ordinaire, le mot est agrandi mais fortement flou. Dans la version SDF, le mot ne se reconstitue pas : seuls quelques traits blancs apparaissent sur le panneau.
+
+Ma conclusion :
+Le SDF est cense mieux conserver la nettete quand le texte est agrandi, contrairement a l'atlas ordinaire qui devient flou. Pourtant, dans ces captures, les lettres SDF sont presque invisibles a 3 metres et ne forment que quelques traits a 50 centimetres : le resultat observe ne confirme donc pas encore l'avantage attendu. Memoire : l'atlas ordinaire a 32 pixels fait 512 x 512 = 262144 octets (un octet par pixel), l'atlas SDF a 32 pixels fait 512 x 512 = 262144 octets, et l'atlas ordinaire a 128 pixels fait 2048 x 2048 = 4194304 octets. Pour obtenir des lettres nettes de pres, l'atlas ordinaire doit donc grossir : celui a 128 pixels pese 16 fois l'atlas a 32 pixels, alors que l'atlas SDF garde la taille de l'atlas a 32 pixels. Les deux images fabriquees font 576 x 256 pixels, soit 8 fois plus large et 8 fois plus haute que l'image de base de 72 x 32 : 147456 pixels contre 2304, 64 fois plus de pixels, donc 64 fois plus de memoire pour une image RGBA de meme contenu. J'ai retenu s = 0.02 car c'est la valeur par defaut utilisee pour fabriquer l'image SDF; cependant, les captures montrent que ce choix ne produit pas ici des lettres suffisamment visibles et qu'il faudrait comparer les autres valeurs de s.
