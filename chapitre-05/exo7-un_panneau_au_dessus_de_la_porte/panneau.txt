@@ -1,0 +1,11 @@
+atlas : 512 x 512
+image : 72 x 32
+
+Ma police et sa taille :
+Police Inter, embarquée dans le moteur (NkEmbeddedFontId::Inter), construite à 32 pixels, sans aucun fichier extérieur. L'atlas fait 512 x 512 pixels. L'image du mot Sortie fait 72 x 32 pixels : sa largeur est la somme des advanceX des six lettres, sa hauteur vaut ascent - descent. Les lettres sont lues dans l'atlas par leurs coordonnées u0, v0, u1, v1. Ces 32 pixels fixent le détail maximal des lettres : l'image n'en contient pas davantage, quelle que soit la distance à laquelle on la regarde.
+
+A trois metres :
+Le panneau occupe environ 77 pixels de large à l'écran pour une image de 72 pixels : un pixel de l'image tombe à peu prés sur un pixel de l'écran. Le mot est petit mais net et lisible, les contours des lettres sont propres.
+
+A cinquante centimetres :
+Le panneau occupe environ 494 pixels de large à l'écran pour la méme image de 72 pixels : un pixel de l'image s'étale sur environ 7 pixels de l'écran. Les lettres sont beaucoup plus grandes mais floues, avec des contours en gros carrés adoucis. S'approcher n'a pas fait appara1164tre de détail nouveau : l'image ne contient que ce que l'atlas à 32 pixels a fourni. Pour un mot net à cinquante centimétres, il faudrait construire l'atlas à une taille de police plus grande que 32 pixels.
