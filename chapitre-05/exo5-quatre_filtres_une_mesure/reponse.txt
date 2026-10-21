@@ -1,0 +1,5 @@
+Ce que la comparaison montre : Sur 65 536 pixels, nearest differe du resultat bilineaire sur 2 920 pixels, soit environ 4,46 %. Bicubic et Lanczos3 ne different pas du bilineaire sur cette execution. Le code actuel du moteur explique ce resultat : ces deux filtres utilisent pour l'instant le meme calcul bilineaire. Il ne faut donc pas conclure que leurs algorithmes donnent toujours une image identique.
+
+L'ecart de temps que j'accepte : J'accepte jusqu'a 800 us de surcout par image au chargement initial. Ici, Lanczos3 prend 1 106,74 us contre 340,18 us pour nearest, soit 766,56 us de plus. Ce surcout n'a de sens que si le filtre produit une difference utile ; ici, le fallback ne change pas l'image par rapport au bilineaire.
+
+Dans quel contexte : Je fais cette reduction au chargement de la texture, une seule fois, et non dans la boucle de rendu. Une reduction de plus d'une milliseconde repetee a chaque image consommerait du temps de rendu sans apporter ici de resultat different avec Bicubic ou Lanczos3. Pour cette version du moteur, je choisis donc le bilineaire et je referai la comparaison lorsque ces filtres seront reellement implementes.
