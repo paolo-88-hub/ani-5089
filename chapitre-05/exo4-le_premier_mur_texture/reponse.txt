@@ -1,0 +1,8 @@
+Ma texture :
+J'ai photographié un mur. Le fichier est murs/mur.jpg ; le moteur l'annonce dans son journal : Texture chargée : Applications/ExoMur/murs/mur.jpg (810x1080 sRGB). Elle est donnée à un matériau qui la prend comme couleur de base (albedo), puis ce matériau est donné à un seul pavé, le mur du fond.
+
+Ce que le mur a gagne :
+Sur avant.png, le mur du fond est d'un beige uni : on voit qu'il est là, mais rien n'indique sa distance. Sur apres.png, le méme mur, vu du méme point de vue, est recouvert d'une grille de dalles gris-bleu séparées par des joints visibles. Ces joints suivent la perspective, ce qui donne à l'oeil une échelle et une distance. Les trois autres murs, le sol et le plafond n'ont pas changé, ce qui permet de comparer.
+
+Ce qui m'a bloque :
+Le chemin de la texture part du dossier de lancement. Mon programme essaie trois chemins et le journal indique celui qui a servi : Applications/ExoMur/murs/mur.jpg, donc le programme est lancé depuis C:\Dev\Nkentseu. Depuis un autre dossier, ce chemin ne serait plus trouvé et le mur resterait de sa couleur unie. J'ai lu le journal avant de toucher au rendu.
