@@ -1,0 +1,5 @@
+Le rapport : En Release, les moyennes sur trois essais sont 79,760 ms pour les matrices et 24,816 ms pour les quaternions, sur un million d'orientations. Le chemin matriciel est donc environ 3,21 fois plus lent. La vérification à 45°/30° donne un écart maximal de 0,000000119 entre les deux quaternions normalisés.
+
+Le coût par image : Une orientation par tête revient à environ 79,76 ns avec les matrices et 24,82 ns avec les quaternions directs. Par rapport au budget de 11 ms à 90 images/s, le chemin matriciel consomme environ (79,76 / 11 000 000) × 100 = 0,00073 % du budget ; le chemin quaternion environ 0,00023 %.
+
+Ce que je pense du choix : L'affirmation est cohérente avec la mesure : pour une tête calculée une fois par image, le coût mesuré est de l'ordre de quelques dizaines de nanosecondes et reste infime face aux 11 ms disponibles. Les quaternions directs sont environ 3,21 fois plus rapides, mais le chemin matriciel ne prend qu'environ 0,00073 % du budget ; garder la même construction que le simulateur est donc raisonnable pour une tête. Si le nombre de têtes augmente, il faudra refaire la mesure.
