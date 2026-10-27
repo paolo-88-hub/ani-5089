@@ -1,0 +1,7 @@
+Lecture du module : La lecture directe de NkInput.MouseRawDeltaX() rejoue à chaque image le dernier déplacement brut conservé par le module. Pendant que la souris est immobile, le lacet continue donc à changer : il passe de 40,8° à -107,5° entre t = 4 s et t = 13 s, soit environ -16,5°/s.
+
+Accumulé et vidé : Les événements bruts sont additionnés dès leur réception. Une fois par image, le programme applique cette somme au lacet, puis remet la somme à zéro. Les relevés vide restent à 49,2° après l’arrêt de la souris, de t = 4 s à t = 13 s.
+
+Accumulé sans vidage : La somme des événements passés n’est jamais remise à zéro et elle est ajoutée à nouveau à chaque image. Le lacet passe de 28 257,0° à 91 870,0° entre t = 4 s et t = 13 s, soit environ 7 068,1°/s, même sans nouvel événement.
+
+Ce que fait le vidage : Il efface la somme déjà appliquée après sa lecture par l’image. Ainsi, chaque déplacement est pris en compte une seule fois, et l’absence de nouveaux événements laisse le lacet stable. Sans vidage, l’accumulateur conserve les anciens comptes (ici, l’équivalent de 49,2°) et les ajoute à nouveau à chaque image.
