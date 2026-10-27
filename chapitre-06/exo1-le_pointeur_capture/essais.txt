@@ -1,0 +1,7 @@
+﻿Avec CaptureMouse seul : en poussant le pointeur au-delà de la fenêtre, le curseur est sorti de la fenêtre ; `CaptureMouse(true)` capture les événements souris, tandis que le confinement visuel à la zone client est demandé par `ClipMouseToClient(true)`.
+
+Ce qui le retient : Vérifié sur l’ordinateur local : avec `ClipMouseToClient(true)`, le pointeur reste dans la zone client. Cet appel demande au système de limiter la position du curseur au rectangle client de la fenêtre.
+
+Deux appuis de suite : Vérifié sur l’ordinateur local : deux appuis sur F2 alors que la souris est déjà prise ne changent pas son état, car le second appel est ignoré par `sourisPrise`. Cette protection évite de rappeler `ShowMouse(false)` inutilement ; sous Windows, `ShowCursor` modifie un compteur à chaque appel, ce n’est pas un simple booléen.
+
+Fermeture sans relâcher : Vérifié sur l’ordinateur local : après fermeture par la croix, le programme appelle `ShowMouse(true)`, `CaptureMouse(false)` et `ClipMouseToClient(false)` avant de détruire la fenêtre, pour rendre le pointeur et retirer capture et confinement.
