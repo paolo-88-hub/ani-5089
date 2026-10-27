@@ -1,0 +1,7 @@
+Ma sensibilité : 0,002 rad/compte, constante pendant toute la mesure.
+
+Vitesse de dérive : -13,1 deg/s (lacet décroissant).
+
+D'où vient ce chiffre : entre t = 60,0 s (lacet = -301,1 deg) et t = 70,0 s (lacet = -432,0 deg), le lacet varie de -130,9 deg en 10,0 s. Le calcul est (-432,0 - (-301,1)) / (70,0 - 60,0) = -13,09 deg/s, soit -13,1 deg/s. Les images passent de 8263 à 9405 et brut vaut -1 sur ces deux lignes.
+
+Pourquoi elle ne s'arrête pas : pendant les relevés, brut reste à -1 d'une seconde à l'autre, alors que la souris est immobile. Le programme relit cette dernière valeur à chaque image et ajoute encore -1 x 0,002 rad au lacet ; le module ne la remet pas à zéro tout seul. La tête continue donc de tourner.

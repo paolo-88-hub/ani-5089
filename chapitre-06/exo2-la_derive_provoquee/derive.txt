@@ -1,0 +1,11 @@
+t = 60.0 s, images = 8263, brut = -1, lacet = -301.1 deg.
+t = 61.0 s, images = 8362, brut = -1, lacet = -312.5 deg.
+t = 62.0 s, images = 8477, brut = -1, lacet = -325.7 deg.
+t = 63.0 s, images = 8578, brut = -1, lacet = -337.2 deg.
+t = 64.0 s, images = 8720, brut = -1, lacet = -353.5 deg.
+t = 65.0 s, images = 8822, brut = -1, lacet = -365.2 deg.
+t = 66.0 s, images = 8947, brut = -1, lacet = -379.5 deg.
+t = 67.0 s, images = 9076, brut = -1, lacet = -394.3 deg.
+t = 68.0 s, images = 9167, brut = -1, lacet = -404.7 deg.
+t = 69.0 s, images = 9287, brut = -1, lacet = -418.5 deg.
+t = 70.0 s, images = 9405, brut = -1, lacet = -432.0 deg.
