@@ -1,0 +1,5 @@
+Pourquoi cette direction : Avant correspond à -Z et le haut à +Y. Avec un repère de la main droite, un lacet positif de 90 degrés tourne l'avant vers -X ; la direction attendue est donc (-1, 0, 0). Cette valeur est écrite directement dans l'épreuve, sans appeler Regard().
+
+L'épreuve qui sait dire non : L'épreuve « lacet -90, tangage 0 » attend (+1, 0, 0). Si le signe du lacet est inversé dans Regard(), elle obtient (-1, 0, 0), échoue et nkmain renvoie 1. Le lancement avec la formule correcte réussit les trois épreuves et renvoie 0.
+
+Ce que la souris ne permettait pas : PoserTete fixe directement le lacet, le tangage et la position, ce qui permet au test de vérifier des orientations précises de façon répétable, sans mouvement manuel ni ouverture de fenêtre. Le même contrôle peut ainsi être lancé automatiquement à chaque construction.
