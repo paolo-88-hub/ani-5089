@@ -1,0 +1,10 @@
+﻿symetrique, ligne 0 : 5.96046448e-08 0 0 0
+symetrique, ligne 1 : 0 0 0 0
+symetrique, ligne 2 : 0 0 0 0
+symetrique, ligne 3 : 0 0 0 0
+symetrique : plus grand ecart 5.96046448e-08
+quest, ligne 0 : 0 0 0 0
+quest, ligne 1 : 0 0 0 0
+quest, ligne 2 : 0 0 0 0
+quest, ligne 3 : 0 0 0 0
+quest : plus grand ecart 0
