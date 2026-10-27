@@ -1,0 +1,5 @@
+Ce que fait le monde : Le monde reste immobile, mais avec tangage*lacet la caméra le fait paraître basculer quand le lacet tourne. Le regard descend de 30° à 0°, puis à -30° entre les lacets 0° et 180° ; avec lacet*tangage, il reste à 30°.
+
+Autour de quel axe : Dans l'ordre fautif, le regard tourne dans le plan perpendiculaire à l'axe qTangage * (0, 1, 0) = (0, cos 30°, sin 30°). Cet axe est incliné de 30° par rapport à la verticale, vers +Z. Les hauteurs relevées — 30°, 0° à 90°, puis -30° — montrent que le regard quitte l'horizontale au lieu de garder son élévation.
+
+L'ordre fautif : C'est tangage*lacet. Le tangage autour de X est composé après le lacet autour de Y dans le repère monde ; l'axe de tangage ne suit donc pas la tête quand elle pivote. La caméra roule et son regard monte ou descend au cours du tour. Pour une tête, lacet*tangage garde le tangage autour de son axe local et une hauteur constante de 30°.
