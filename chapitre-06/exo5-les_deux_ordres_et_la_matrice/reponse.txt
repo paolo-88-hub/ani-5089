@@ -1,0 +1,5 @@
+L'ordre que rejoint la matrice : Le calcul matriciel donne (-0.6124, 0.5000, -0.6124), comme le produit lacet*tangage. Le produit tangage*lacet donne plutôt (-0.7071, 0.3536, -0.6124) ; les deux ordres ne sont donc pas interchangeables.
+
+L'ordre d'une tête : Pour lever les yeux de 30°, la composante verticale attendue est y = sin(30°) = 0,5. Le lacet autour de l'axe vertical ne change pas cette hauteur quand le tangage agit autour de l'axe local de la tête. Le résultat lacet*tangage et les matrices ont y = 0.5000 ; tangage*lacet a y = 0.3536 et ne correspond pas au geste demandé.
+
+Comment je l'ai vérifié : J'ai calculé les deux produits avec NkQuatf et la rotation avec NkMat4f, puis j'ai appliqué chaque rotation au vecteur avant (0, 0, -1). Les trois lignes ont été imprimées au lancement avec quatre décimales et recopiées dans regards.txt. La comparaison à la main de y = 0,5 identifie l'ordre qui correspond à une tête.
