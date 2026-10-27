@@ -1,0 +1,5 @@
+﻿Quand les deux méthodes s'accordent : Pour la pose neutre, la droite de la tête est l'axe +X du monde. Les deux calculs donnent donc les mêmes positions : G (0.2685, 1.7000, 1.2000) et D (0.3315, 1.7000, 1.2000), avec un écart de 0.000 mm entre les positions de l'œil gauche.
+
+Quand elles divergent : En roulis 30, la méthode liée à la tête donne G (0.2727, 1.6842, 1.2000), contre G (0.2685, 1.7000, 1.2000) dans le monde : l'écart calculé avant arrondi est de 16.306 mm. En lacet 90, elle donne G (0.3000, 1.7000, 1.2315), contre G (0.2685, 1.7000, 1.2000), soit 44.548 mm. La tête a tourné sa droite, alors que l'axe +X du monde reste fixe.
+
+Ce qu'un visiteur sentirait : Si l'écart entre les yeux est placé sur le mauvais axe, les deux images ne correspondent plus aux positions réelles des yeux. L'écart de 16.306 mm en roulis et surtout celui de 44.548 mm en lacet peuvent décaler les vues gauche et droite et fausser la profondeur perçue. Le visiteur pourrait ressentir une image inconfortable, une profondeur incohérente ou une fatigue visuelle.
