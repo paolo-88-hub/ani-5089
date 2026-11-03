@@ -1,0 +1,6 @@
+﻿La fréquence de mon écran : 144 Hz dans les paramètres Windows; la médiane mesurée avec attente est de 6.946 ms, proche des 6.944 ms attendues à cette fréquence.
+
+La cadence que je tiens : ma moyenne avec attente, 6.956 ms, est sous le budget de 8.333 ms à 120 Hz; la moyenne est donc compatible avec 120 Hz. Mais, sans complaisance, si chaque intervalle doit respecter son budget, seule 72 Hz est tenue sur les 1 000 mesurés : le maximum reste sous 13.889 ms, mais dépasse les budgets de 90 et 120 Hz.
+
+Ce que dit le maximum : avec attente, 13.462 ms dépasse les budgets de 8.333 ms à 120 Hz et 11.111 ms à 90 Hz. La moyenne cachait donc des ralentissements ponctuels; le maximum mesuré reste toutefois sous le budget de 13.889 ms à 72 Hz.
+

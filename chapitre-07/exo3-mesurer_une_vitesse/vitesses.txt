@@ -1,0 +1,43 @@
+﻿serie programme
+image 2: dt = 14.257 ms, vitesse = (0.000, 30.000, 0.000) deg/s
+image 3: dt = 7.122 ms, vitesse = (0.000, 30.000, 0.000) deg/s
+image 4: dt = 4.361 ms, vitesse = (0.000, 29.998, 0.000) deg/s
+image 5: dt = 4.490 ms, vitesse = (0.000, 30.001, 0.000) deg/s
+image 6: dt = 3.895 ms, vitesse = (0.000, 30.001, 0.000) deg/s
+image 7: dt = 4.833 ms, vitesse = (0.000, 30.001, 0.000) deg/s
+image 8: dt = 27.731 ms, vitesse = (0.000, 29.999, 0.000) deg/s
+image 9: dt = 6.842 ms, vitesse = (0.000, 30.001, 0.000) deg/s
+image 10: dt = 6.945 ms, vitesse = (0.000, 30.001, 0.000) deg/s
+image 11: dt = 7.086 ms, vitesse = (0.000, 30.000, 0.000) deg/s
+image 12: dt = 6.684 ms, vitesse = (0.000, 29.999, 0.000) deg/s
+image 13: dt = 7.064 ms, vitesse = (0.000, 30.000, 0.000) deg/s
+image 14: dt = 6.930 ms, vitesse = (0.000, 30.000, 0.000) deg/s
+image 15: dt = 7.000 ms, vitesse = (0.000, 30.001, 0.000) deg/s
+image 16: dt = 7.270 ms, vitesse = (0.000, 29.999, 0.000) deg/s
+image 17: dt = 6.618 ms, vitesse = (0.000, 30.000, 0.000) deg/s
+image 18: dt = 7.024 ms, vitesse = (0.000, 29.999, 0.000) deg/s
+image 19: dt = 6.879 ms, vitesse = (0.000, 30.001, 0.000) deg/s
+image 20: dt = 7.072 ms, vitesse = (0.000, 30.000, 0.000) deg/s
+image 21: dt = 6.853 ms, vitesse = (0.000, 30.000, 0.000) deg/s
+
+serie souris
+image 2: dt = 15.110 ms, vitesse = (0.000, 25.026, -0.000) deg/s
+image 3: dt = 8.143 ms, vitesse = (-0.000, 30.961, 0.000) deg/s
+image 4: dt = 4.675 ms, vitesse = (0.000, 26.960, -0.000) deg/s
+image 5: dt = 4.142 ms, vitesse = (-0.000, 30.432, 0.000) deg/s
+image 6: dt = 4.656 ms, vitesse = (0.000, 54.142, -0.000) deg/s
+image 7: dt = 36.258 ms, vitesse = (-0.000, 31.288, 0.000) deg/s
+image 8: dt = 19.000 ms, vitesse = (-0.000, 26.537, -0.000) deg/s
+image 9: dt = 6.972 ms, vitesse = (0.000, 36.161, 0.000) deg/s
+image 10: dt = 6.850 ms, vitesse = (-0.000, 36.802, -0.000) deg/s
+image 11: dt = 6.932 ms, vitesse = (-0.000, 36.367, 0.000) deg/s
+image 12: dt = 7.003 ms, vitesse = (0.000, 18.000, 0.000) deg/s
+image 13: dt = 6.878 ms, vitesse = (-0.000, 36.656, -0.000) deg/s
+image 14: dt = 6.999 ms, vitesse = (-0.000, 36.021, -0.000) deg/s
+image 15: dt = 6.884 ms, vitesse = (0.000, 36.621, 0.000) deg/s
+image 16: dt = 6.933 ms, vitesse = (0.000, 18.180, 0.000) deg/s
+image 17: dt = 6.977 ms, vitesse = (0.000, 36.132, 0.000) deg/s
+image 18: dt = 6.973 ms, vitesse = (-0.000, 36.153, -0.000) deg/s
+image 19: dt = 6.977 ms, vitesse = (0.000, 36.131, 0.000) deg/s
+image 20: dt = 6.992 ms, vitesse = (-0.000, 18.028, -0.000) deg/s
+image 21: dt = 6.869 ms, vitesse = (-0.000, 36.700, 0.000) deg/s

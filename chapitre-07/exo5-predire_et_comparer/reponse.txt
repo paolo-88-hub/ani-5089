@@ -1,0 +1,5 @@
+﻿Le gain : l’erreur moyenne sans prédiction divisée par celle avec prédiction vaut 0.206322 / 0.065507 = 3.15. Sur cette série, la prédiction réduit l’erreur moyenne d’environ 68 %.
+
+D’où vient l’erreur qui reste : l’extrapolation suppose que la vitesse angulaire reste constante pendant 6.944 ms, la période de l’écran à 144 Hz. Pour cette prise, j’ai envoyé des déplacements relatifs de souris à cadence contrôlée, avec des pauses et des changements de direction. Les comptes entiers reçus par image et la variation de dt empêchent le modèle de prévoir ces changements. Il y a eu 110 images immobiles sur les 1 000 mesurées.
+
+Le facteur dix : non pour cette série. Le gain mesuré est d’environ 3.15, pas dix ou davantage. Il dépend du mouvement mesuré : une rotation plus régulière peut mieux correspondre à l’hypothèse de vitesse constante qu’une série avec pauses et inversions.

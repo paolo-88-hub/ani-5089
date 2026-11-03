@@ -1,0 +1,5 @@
+﻿Ce qui est stable : pour chaque essai, la période ajoutée à maintenant reste fixe et l’écart prédit − maintenant vaut cette période. Le début réel suivant varie avec la présentation de l’image; la moyenne réel − prédit dépend donc de la cadence demandée.
+
+Un divisé par la cadence : 1/72 s = 13.889 ms, 1/60 s = 16.667 ms, 1/90 s = 11.111 ms et 1/120 s = 8.333 ms. Ces quatre périodes correspondent à celles calculées et imprimées par le programme.
+
+La période de mon écran : j’ajoute chaque erreur moyenne à la période prédite : 13.889 − 6.948 = 6.941 ms; 16.667 − 9.725 = 6.942 ms; 11.111 − 4.170 = 6.941 ms; 8.333 − 1.391 = 6.942 ms. Leur moyenne vaut 6.942 ms, soit environ 144 Hz, conforme au réglage Windows de 144 Hz.

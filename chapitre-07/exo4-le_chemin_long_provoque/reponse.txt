@@ -1,0 +1,7 @@
+﻿L'image fautive : image 1784 à 270.009 deg. Sa vitesse Y vaut -19.996 deg/s alors que les images 1783 et 1785 sont proches de +20 deg/s; delta.w vaut -0.999999285 sur cette seule image.
+
+Le rapport : -19.996 / 20.004 = -0.9996, soit environ -1. Avec le test rétabli, à 269.990 deg, la vitesse redevient +20.002 deg/s et delta.w = +0.999999285.
+
+Pourquoi à ce lacet : NkAngle ramène 270 deg à -90 deg. Au passage de cette représentation, la conversion de la matrice en quaternion change de représentant, de q à -q, pour la même orientation. Angle() calcule 2 acos(|w|), donc garde un petit angle, mais Axis() conserve l'axe inversé du delta. Sans le test qui retourne le quaternion quand delta.w < 0, la vitesse garde le mauvais signe.
+
+Ce qu'aurait vu le casque : une prédiction faite avec -20 deg/s partirait dans le sens opposé au mouvement réel de +20 deg/s. Pour un horizon d’environ 7 ms, l’orientation prédite serait décalée d’environ 40 × 0.007 = 0.28 deg, ce qui peut décaler les contours ou créer un léger dédoublement.

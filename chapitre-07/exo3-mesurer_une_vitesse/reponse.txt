@@ -1,0 +1,5 @@
+﻿La série programmée : les 20 vitesses sont presque constantes sur l’axe Y, de 29.998 à 30.001 deg/s (moyenne 30.000 deg/s), alors que dt varie de 3.895 à 27.731 ms. Le tour suit donc le temps écoulé, pas le nombre d’images.
+
+La série à la souris : avec un déplacement horizontal régulier d’un compte toutes les 4 ms, les 20 vitesses mesurées vont de 18.000 à 54.142 deg/s (moyenne 32.165 deg/s), principalement sur Y. Elles sont nettement moins stables que la série programmée.
+
+D’où vient le bruit : le programme fournit un angle continu calculé depuis l’horloge, tandis que la souris fournit des comptes entiers regroupés par image. À dt proche de 7 ms, un compte donne environ 18 deg/s et deux comptes environ 36 deg/s; la variation de dt (4.142 à 36.258 ms) amplifie aussi l’écart quand la rotation mesurée est divisée par dt.
