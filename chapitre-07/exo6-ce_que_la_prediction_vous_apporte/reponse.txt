@@ -1,0 +1,5 @@
+Mes deux gestes : j'ai choisi un geste lent de 30 deg en 2000 ms et un demi-tour de 180 deg en 160 ms. Le premier représente une rotation douce et le second un changement de direction très rapide ; ils gardent tous deux le même profil d'accélération puis de freinage que le geste rapide demandé.
+
+Où elle aide le moins : pour le demi-tour, le rapport sans prédiction / avec prédiction est le plus faible des trois, environ 3.76. La prédiction aide donc proportionnellement le moins sur ce geste, même si elle réduit encore l'erreur moyenne de 15.00 deg à 3.99 deg.
+
+Pourquoi là : l'extrapolation prolonge pendant une période (1/72 s) la vitesse angulaire calculée entre les deux dernières poses, comme si elle restait constante. Or le demi-tour choisi accélère puis freine très vite : sa vitesse change fortement pendant cette période. Le modèle ne peut pas anticiper ce changement, ce qui laisse une erreur plus grande que pour les gestes plus doux.
