@@ -1,0 +1,7 @@
+latence 0 ms : avec 0.149772 deg (max 0.529340), sans 1.384328 deg (max 4.905756)
+latence 10 ms : avec 0.451215 deg (max 1.585071), sans 2.768965 deg (max 9.788658)
+latence 20 ms : avec 0.902182 deg (max 3.146175), sans 4.153601 deg (max 14.659723)
+latence 40 ms : avec 1.500281 deg (max 5.191716), sans 5.538216 deg (max 19.460955)
+latence 80 ms : avec 4.151692 deg (max 13.934790), sans 9.692059 deg (max 33.530453)
+sans borne : echantillon a 1.194444 s, horizon 888.889 ms, predit -4.470564 deg, vrai 90.000000 deg
+avec borne : echantillon a 1.194444 s, horizon 888.889 ms, predit 78.192513 deg, vrai 90.000000 deg
