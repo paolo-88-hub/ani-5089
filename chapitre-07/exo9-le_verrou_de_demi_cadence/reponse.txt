@@ -1,0 +1,5 @@
+Les deux écarts types : sans verrou, l'écart type vaut 0.501993 ms; avec le verrou, il tombe à 0.009766 ms, soit environ 51 fois moins. Le maximum passe aussi de 20.771400 ms à 14.159000 ms. Le verrou rend donc les intervalles beaucoup plus réguliers sur ces 1 000 mesures.
+
+Ce que coûte le verrou : la cadence passe d'environ 143.66 images/s sans verrou à 71.99 images/s avec verrou, presque exactement la moitié. On échange environ 71.67 images/s contre une dispersion bien plus faible et une cadence proche de deux périodes de l'écran (13.889 ms).
+
+La décision du moteur : ces mesures vont dans le sens du verrou demi-cadence. Sans verrou, la moyenne dépasse déjà de peu la période de l'écran à 144 Hz (6.944 ms), l'écart type est plus grand et une pointe atteint 20.77 ms; avec verrou, la moyenne rejoint deux périodes et l'écart type devient très faible. Un écran de bureau ne montre toutefois pas le confort d'un casque ni la reprojection ASW : ces mesures comparent seulement le rythme et sa régularité.
