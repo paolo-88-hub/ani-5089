@@ -1,0 +1,15 @@
+﻿Anneau de trois images :
+AcquireImage 0
+ReleaseImage OK
+AcquireImage 1
+ReleaseImage OK
+AcquireImage 2
+ReleaseImage OK
+AcquireImage 0
+Refus : double emprunt
+AcquireImage 1
+AcquireImage REFUSE
+Refus : rendu sans emprunt
+ReleaseImage REFUSE
+Refus : chaîne trop grande
+AcquireImage REFUSE

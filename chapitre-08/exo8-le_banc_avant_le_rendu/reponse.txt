@@ -1,0 +1,3 @@
+﻿Ce que le banc refuse : le double emprunt d'une image déjà acquise, le rendu lorsqu'aucune image n'est empruntée et la création d'une chaîne dépassant le maximum autorisé de quatre images.
+
+Pourquoi un simulateur permissif serait pire : il laisserait passer des séquences que le vrai runtime refuse. Le programme semblerait fonctionner pendant les essais, puis pourrait se bloquer ou afficher des images incorrectes sur le casque. Un simulateur strict révèle ces erreurs tôt, sans fenêtre, carte graphique ni casque.
