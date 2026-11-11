@@ -1,0 +1,7 @@
+Fenetre redimensionnee : 1280x720 -> 1600x900
+Detruit chaine gauche
+Detruit chaine droite
+Recree chaine gauche
+Reenregistre les trois poignees de gauche
+Recree chaine droite
+Reenregistre les trois poignees de droite
