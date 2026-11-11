@@ -1,2 +1,1 @@
-Essai du 11 novembre 2026, Vulkan, cible hors ecran 320x360, taille forcee omise.
-Le processus a termine 100 images (code de sortie 0). Aucun fil principal bloque : aucune pile de blocage a relever.
+Pendant mon essai du 11 novembre 2026, avec une cible hors écran de 320×360 et sans taille forcée, le programme a dessiné 100 images puis s’est terminé normalement (code 0). Le fil principal ne s’est pas bloqué; je n’ai donc pas de pile de blocage à fournir.

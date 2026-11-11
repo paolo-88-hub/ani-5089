@@ -1,5 +1,5 @@
-A quelle image ca s'est fige : le figement n'a pas ete reproduit. Avec la cible 320x360 et sans SetRenderSizeOverride, le moteur a dessine 100 images; avant.txt conserve ce releve effectif.
+A quelle image ca s'est fige : je n’ai pas réussi à provoquer le figement sur mon poste. Avec une cible de 320×360 et sans SetRenderSizeOverride, le programme a dessiné 100 images puis s’est terminé. Je ne peux donc pas indiquer un numéro d’image de blocage.
 
-Ce que la pile montrait : rien de bloque. Le processus a termine normalement, donc il n'existe pas de pile de fil principal en attente a fournir. pile.txt indique le resultat du test au lieu d'inventer une capture.
+Ce que la pile montrait : le programme s’est terminé normalement et le fil principal n’attendait plus. Je n’ai pas pu relever de pile de blocage; le résultat de mon essai est noté dans pile.txt.
 
-Pourquoi rien n'est journalise : lorsqu'un vrai fil principal attend un travail GPU qui ne termine pas, il n'atteint plus le code qui journalise l'image suivante. Ici, cette panne n'est pas apparue dans le runtime Vulkan teste.
+Pourquoi rien n'est journalise : si le fil principal attend un travail GPU qui ne se termine pas, il ne revient pas au code qui journalise l’image suivante. Le programme cesse alors d’avancer sans forcément afficher d’erreur.

@@ -51,8 +51,8 @@ bool CreerChaine(ChaineOeil& oeil, NkXrEye identifiant,
 }
 
 void EnregistrerPoignees(ChaineOeil& oeil, uint64& prochainePoignee) {
-    // Ces identifiants opaques représentent les images enregistrées par
-    // l'application. NkXrSwapchain les conserve sans les interpréter.
+    // Chaque index reçoit une poignée opaque distincte. La chaîne conserve
+    // cette valeur sans en interpréter le contenu.
     for (uint32 index = 0; index < kNombreImages; ++index) {
         oeil.chaine.SetImageNative(index, prochainePoignee++);
     }

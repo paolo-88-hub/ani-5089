@@ -1,5 +1,5 @@
-Ce qui se passe sans recreer : après le redimensionnement, les chaînes gardent les poignées des anciennes cibles. Elles ne désignent plus les images valides et la soumission peut afficher une image noire ou incorrecte.
+Ce qui se passe sans recreer : après le redimensionnement, les anciennes poignées peuvent encore désigner les cibles d’avant. Je détruis donc les deux chaînes et je les recrée pour qu’elles correspondent aux nouvelles dimensions.
 
-Pourquoi reenregistrer ne suffit pas seul : une chaîne recréée ne connaît pas automatiquement les nouvelles poignées. Il faut enregistrer de nouveau chaque image auprès de sa chaîne après la recréation.
+Pourquoi reenregistrer ne suffit pas seul : une chaîne recréée ne connaît pas automatiquement les images à utiliser. Je dois enregistrer de nouveau chacune des trois poignées dans chaque chaîne.
 
-Ce que les deux yeux doivent partager : le même cycle de vie et la même synchronisation des images, afin que les deux chaînes survivent ensemble au redimensionnement. Chaque œil conserve toutefois sa propre chaîne, ses propres images et ses propres poignées.
+Ce que les deux yeux doivent partager : je redimensionne leurs chaînes au même moment et je les fais avancer dans le même ordre, pour garder les deux images synchronisées. Chaque œil conserve sa propre chaîne et ses propres poignées.
