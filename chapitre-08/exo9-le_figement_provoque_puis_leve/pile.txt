@@ -1,0 +1,2 @@
+Essai du 11 novembre 2026, Vulkan, cible hors ecran 320x360, taille forcee omise.
+Le processus a termine 100 images (code de sortie 0). Aucun fil principal bloque : aucune pile de blocage a relever.
