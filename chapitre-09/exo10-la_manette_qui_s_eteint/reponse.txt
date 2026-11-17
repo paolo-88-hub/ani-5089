@@ -1,0 +1,5 @@
+Ce que le programme a cru : quand la manette s'est eteinte, courant est passe de 1 a 0 et change a valu 1. La version fautive a interprete ce front comme un relachement et a laisse tomber l'objet.
+
+Ce qui se passait vraiment : le doigt etait toujours sur la gachette, mais la source etait inactive. current vaut faux pour une action inactive ; sans verifier actif, le programme ne peut pas distinguer cette interruption d'un relachement physique.
+
+Ce que je teste maintenant : je ne detache l'objet que si actif est vrai, courant est faux et change est vrai. J'ai choisi de garder l'objet pendant une interruption temporaire de la manette afin d'eviter une chute accidentelle ; une application peut definir une autre politique si elle prefere detacher pour des raisons de securite.

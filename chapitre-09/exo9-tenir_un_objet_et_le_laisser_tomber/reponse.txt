@@ -1,0 +1,5 @@
+Ce qui se passe sur le front : le front de saisie est current && changed. Il n'est vrai qu'à l'image de l'appui. Si le programme ne rattache l'objet que pendant cette image, il cesse de le tenir dès l'image suivante, même si le doigt reste appuyé. L'objet tombe.
+
+Ce qui se passe sur le niveau : current reste vrai pendant toutes les images où le doigt est maintenu. Je mémorise une seule fois la pose de l'objet dans le repère de la paume, au moment de la saisie, avec posePaume.Inverted() * poseObjet. À chaque image tenue, je recalcule poseObjet = posePaume * attache. L'objet reste à l'endroit où il a été pris.
+
+Ce que je teste pour lacher : je vérifie active && !current && changed. C'est le front de relâchement d'une action encore liée. Je détache alors l'objet ; je ne confonds pas un bouton relâché avec une manette inactive.

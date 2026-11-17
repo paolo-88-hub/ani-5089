@@ -1,0 +1,3 @@
+Ce que dit la colonne change : elle vaut 1 uniquement quand l'état courant diffère de celui de l'image précédente. Elle signale donc l'appui et le relâchement, mais pas les images où la touche reste tenue.
+
+Ce que dit la colonne actif : elle indique si une source est liée à l'action. Une action inactive peut avoir courant égal à 0 même si aucune touche n'a été relâchée ; il faut donc consulter actif pour distinguer une source absente d'un bouton relâché.
