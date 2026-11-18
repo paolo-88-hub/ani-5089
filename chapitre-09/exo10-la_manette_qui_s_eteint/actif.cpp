@@ -7,46 +7,61 @@ struct EtatAction {
 };
 
 int main() {
-    const bool pressionPhysique = true;
     bool courantPrecedent = false;
-    bool objetAvantTenu = false;
-    bool objetApresTenu = false;
+    bool objetTenuAvant = false;
+    bool objetTenuApres = false;
+    bool objetTombeAvant = false;
+    bool objetTombeApres = false;
+    bool tombeAvantImage6 = false;
+    bool tenuApresImage6 = false;
 
+    // La manette s'eteint aux images 6 a 15, soit dix images.
+    // Le bouton reste physiquement tenu jusqu'a l'image 18.
     for (int image = 1; image <= 20; ++image) {
-        const bool manetteAllumee = image <= 5 || image >= 16;
-        const EtatAction etat{
-            manetteAllumee && pressionPhysique,
-            (manetteAllumee && pressionPhysique) != courantPrecedent,
-            manetteAllumee
-        };
+        const bool boutonPhysiquementTenu = image <= 18;
+        const bool actif = !(image >= 6 && image <= 15);
+        const bool courant = actif && boutonPhysiquementTenu;
+        const bool change = courant != courantPrecedent;
+        const EtatAction saisir{courant, change, actif};
 
-        // Les deux versions utilisent le niveau pour tenir l'objet.
-        if (etat.courant) {
-            objetAvantTenu = true;
-            objetApresTenu = true;
+        // Version fautive : le faux courant provoque un faux relachement
+        // lorsque la manette s'eteint, car le code ignore saisir.actif.
+        if (!objetTombeAvant && saisir.courant) {
+            objetTenuAvant = true;
+        }
+        if (objetTenuAvant && !saisir.courant && saisir.change) {
+            objetTenuAvant = false;
+            objetTombeAvant = true;
         }
 
-        // Comportement fautif observe avant correction : current devient faux
-        // quand la source s'eteint, et ce faux front est pris pour un lacher.
-        if (!etat.courant && etat.change) {
-            objetAvantTenu = false;
+        // Version corrigee : current tient l'objet; seul un vrai front de
+        // relachement d'une action active peut le detacher.
+        if (!objetTombeApres && saisir.courant) {
+            objetTenuApres = true;
+        }
+        if (objetTenuApres && saisir.actif &&
+            !saisir.courant && saisir.change) {
+            objetTenuApres = false;
+            objetTombeApres = true;
         }
 
-        // Comportement corrige : une source inactive ne peut pas signaler un
-        // lacher. On conserve donc l'objet tenu pendant cette interruption.
-        if (etat.actif && !etat.courant && etat.change) {
-            objetApresTenu = false;
+        if (image == 6) {
+            tombeAvantImage6 = objetTombeAvant;
+            tenuApresImage6 = objetTenuApres;
         }
 
         std::cout << "image : " << image
-                  << ", courant : " << etat.courant
-                  << ", change : " << etat.change
-                  << ", actif : " << etat.actif << '\n';
+                  << ", courant : " << saisir.courant
+                  << ", change : " << saisir.change
+                  << ", actif : " << saisir.actif << '\n';
 
-        courantPrecedent = etat.courant;
+        courantPrecedent = saisir.courant;
     }
 
-    (void)objetAvantTenu;
-    (void)objetApresTenu;
-    return 0;
+    // Verifier que les deux captures correspondent bien a l'image 6 et que
+    // le code corrige detachera aussi l'objet au vrai relachement (image 19).
+    if (!tombeAvantImage6 || !tenuApresImage6 || !objetTombeApres ||
+        objetTenuApres) {
+        return 1;
+    }
 }

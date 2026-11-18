@@ -1,5 +1,5 @@
-Ce que le programme a cru : quand la manette s'est eteinte, courant est passe de 1 a 0 et change a valu 1. La version fautive a interprete ce front comme un relachement et a laisse tomber l'objet.
+Ce que le programme a cru : quand courant est passe a 0 avec change a 1, il a interprete cela comme un relachement et a lache l'objet.
 
-Ce qui se passait vraiment : le doigt etait toujours sur la gachette, mais la source etait inactive. current vaut faux pour une action inactive ; sans verifier actif, le programme ne peut pas distinguer cette interruption d'un relachement physique.
+Ce qui se passait vraiment : la manette etait eteinte pendant dix images. L'action etait inactive; le bouton n'avait pas ete relache. Courant et change ne suffisent pas a distinguer ces deux situations : il faut aussi lire actif.
 
-Ce que je teste maintenant : je ne detache l'objet que si actif est vrai, courant est faux et change est vrai. J'ai choisi de garder l'objet pendant une interruption temporaire de la manette afin d'eviter une chute accidentelle ; une application peut definir une autre politique si elle prefere detacher pour des raisons de securite.
+Ce que je teste maintenant : je detache l'objet seulement si actif est vrai, courant est faux et change est vrai. Je choisis de le garder pendant cette panne courte pour ne pas le faire tomber; en cas de deconnexion durable, une politique distincte de depot securise serait necessaire.

@@ -16,5 +16,5 @@ image : 15, courant : 0, change : 0, actif : 0
 image : 16, courant : 1, change : 1, actif : 1
 image : 17, courant : 1, change : 0, actif : 1
 image : 18, courant : 1, change : 0, actif : 1
-image : 19, courant : 1, change : 0, actif : 1
-image : 20, courant : 1, change : 0, actif : 1
+image : 19, courant : 0, change : 1, actif : 1
+image : 20, courant : 0, change : 0, actif : 1
